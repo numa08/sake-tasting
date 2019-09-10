@@ -1,53 +1,22 @@
-import 'package:app/data/database/tasting_sqlite.dart';
+import 'package:app/data/database/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
-import 'data/database/entities/brewery_entity_impl.dart';
-import 'data/database/entities/sake_entity_impl.dart';
 
 void main() {
   // Enable integration testing with the Flutter Driver extension.
   // See https://flutter.dev/testing/ for more info.
   enableFlutterDriverExtension();
   runApp(MyApp());
-  initDB();
+  Sqflite.setDebugModeOn(true);
+  testDatabase();
 }
 
-void initDB() async {
-  await Future<void>.delayed(Duration(seconds: 3));
-  await Sqflite.setDebugModeOn(true);
-  final path = join(await getDatabasesPath(), 'sake_tasting.db');
-  final database = TastingSQLiteDB(path);
-  await database.insertBrewery(BreweryEntityImpl(id: 'test', name: 'test'));
-  await database.insertSake(SakeEntityImpl(
-      name: 'test',
-      id: 'test',
-      aromaComplexityOther: 'test',
-      aromaExample: 'test',
-      aromaOther: 'test',
-      attackOther: 'test',
-      breweriesID: 'test',
-      createdAtUTC: 0,
-      flavorComplexityOther: 'test',
-      flavorExample: 'test',
-      flavorSoundness: 'test',
-      flavorStrengthOther: 'test',
-      hueOther: 'test',
-      individuality: 'test',
-      mainFlavor: 'test',
-      notice: 'test',
-      reverberationElement: 'test',
-      reverberationOther: 'test',
-      sweetnessOther: 'test',
-      tasteExample: 'test',
-      tasteSoundness: 'test',
-      texture: 'test',
-      typeNotice: 'test',
-      updatedAtUTC: 0,
-      viscosityOther: 'test',
-      visualSoundness: 'test'));
+void testDatabase() async {
+  final database =
+      TastingNoteDatabase(join(await getDatabasesPath(), 'test.db'));
+  await database.findSakeByID('test');
 }
 
 class MyApp extends StatelessWidget {

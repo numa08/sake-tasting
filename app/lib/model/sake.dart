@@ -10,4 +10,5 @@ class Sake extends Equatable {
   Sake({this.id, this.name}) : super(<dynamic>[id]);
   final SakeID id;
   final String name;
+  Sake copyTo({String name}) => Sake(id: id, name: name ?? this.name);
 }

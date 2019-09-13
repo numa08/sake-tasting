@@ -8,5 +8,8 @@ abstract class TastingNoteDatabase {
   Future<List<Brewery>> allBreweries();
   Future<Sake> findSakeByID(String id);
   Future<Brewery> findBreweryByID(String id);
+  Future<void> saveTastingNote(TastingNote note);
+  Future<void> saveSake(Sake sake);
+  Future<void> saveBrewery(Brewery brewery);
   Future<void> close();
 }

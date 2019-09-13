@@ -28,4 +28,24 @@ class TastingNote extends Equatable {
   final Brewery brewery;
   final String comment;
   final DateTime createdAt;
+
+  TastingNote copyTo({Sake sake, Brewery brewery, String comment}) =>
+      TastingNote(
+          id: id,
+          sake: sake ?? this.sake,
+          brewery: brewery ?? this.brewery,
+          comment: comment ?? this.comment,
+          createdAt: createdAt);
+
+  e.TastingNote toTastingNoteEntity() => e.TastingNote.crate(
+      tastingNoteID: id.value,
+      comment: comment,
+      sakeID: sake.id.value,
+      createdAtUTC: createdAt.toUtc().millisecondsSinceEpoch);
+
+  e.Sake toSakeEntity() => e.Sake.create(
+      sakeID: sake.id.value, breweryID: brewery.id.value, name: sake.name);
+
+  e.Brewery toBreweryEntity() =>
+      e.Brewery.create(breweryID: brewery.id.value, name: brewery.name);
 }

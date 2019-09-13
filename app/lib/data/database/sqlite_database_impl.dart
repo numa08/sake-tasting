@@ -53,6 +53,24 @@ class SQLiteDatabaseImpl implements TastingNoteDatabase {
   }
 
   @override
+  Future<void> saveTastingNote(TastingNote note) async {
+    final database = await _databaseManager.database;
+    await database.insert('tasting_note', note.toJSON());
+  }
+
+  @override
+  Future<void> saveBrewery(Brewery brewery) async {
+    final database = await _databaseManager.database;
+    await database.insert('brewery', brewery.toJSON());
+  }
+
+  @override
+  Future<void> saveSake(Sake sake) async {
+    final database = await _databaseManager.database;
+    await database.insert('sake', sake.toJSON());
+  }
+
+  @override
   Future<void> close() async {
     await (await _databaseManager.database).close();
   }

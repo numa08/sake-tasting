@@ -10,4 +10,5 @@ class Brewery extends Equatable {
   Brewery({this.id, this.name}) : super(<dynamic>[id]);
   final BreweryID id;
   final String name;
+  Brewery copyTo({String name}) => Brewery(id: id, name: name ?? this.name);
 }

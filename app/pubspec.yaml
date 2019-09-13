@@ -27,6 +27,8 @@ dependencies:
   sqflite: ^1.1.6+4
   json_annotation: ^3.0.0
   equatable: ^0.5.1
+  bloc_provider: ^0.6.2+1
+  uuid: ^2.0.2
 
 dev_dependencies:
   flutter_test:

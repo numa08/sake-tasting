@@ -11,15 +11,9 @@ class EditTastingNoteBloc implements Bloc {
       ..add(onBuild.listen((_) {
         editTastingNoteModel.startEditing();
       }))
-      ..add(onChangeBreweryName
-          .doOnData(print)
-          .listen(editTastingNoteModel.setBreweryName))
-      ..add(onChangeSakeName
-          .doOnData(print)
-          .listen(editTastingNoteModel.setSakeName))
-      ..add(onChangeComment
-          .doOnData(print)
-          .listen(editTastingNoteModel.setComment))
+      ..add(onChangeBreweryName.listen(editTastingNoteModel.setBreweryName))
+      ..add(onChangeSakeName.listen(editTastingNoteModel.setSakeName))
+      ..add(onChangeComment.listen(editTastingNoteModel.setComment))
       ..add(onClickSaveButton.listen((_) {
         editTastingNoteModel.save();
       }));
@@ -28,13 +22,14 @@ class EditTastingNoteBloc implements Bloc {
         .where((t) => t != null)
         .switchMap((t) => editTastingNoteModel.saveResult(t.id))
         .whereType<ValueResult<TastingNote>>()
-        .cast<dynamic>()
-        .pipe(_showSaveSuccessToastSubject);
+        .mapTo(null)
+        .cast<void>()
+        .pipe(_dismissSubject);
   }
 
   final EditTastingNoteModel editTastingNoteModel;
   Observable<bool> get enableSaveButton => _enableSaveButtonSubject;
-  Observable<dynamic> get showSaveSuccessToast => _showSaveSuccessToastSubject;
+  Observable<void> get dismiss => _dismissSubject;
   final PublishSubject<void> onBuild = PublishSubject<void>();
   final PublishSubject<String> onChangeBreweryName = PublishSubject<String>();
   final PublishSubject<String> onChangeSakeName = PublishSubject<String>();
@@ -42,7 +37,7 @@ class EditTastingNoteBloc implements Bloc {
   final PublishSubject<void> onClickSaveButton = PublishSubject<void>();
 
   final _enableSaveButtonSubject = PublishSubject<bool>();
-  final _showSaveSuccessToastSubject = PublishSubject<dynamic>();
+  final _dismissSubject = PublishSubject<void>();
   final _subscriptions = <StreamSubscription<dynamic>>[];
 
   @override
@@ -54,7 +49,7 @@ class EditTastingNoteBloc implements Bloc {
     await onChangeComment.close();
     await onClickSaveButton.close();
     await _enableSaveButtonSubject.close();
-    await _showSaveSuccessToastSubject.close();
+    await _dismissSubject.close();
     await editTastingNoteModel.close();
   }
 }

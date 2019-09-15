@@ -2,10 +2,10 @@ import 'package:app/data/database/database.dart';
 import 'package:app/model/model.dart';
 import 'package:rxdart/rxdart.dart';
 
-class TastingNoteModelImpl extends TastingNoteModel {
-  TastingNoteModelImpl(this.database);
+class TastingNoteModelImpl implements TastingNoteModel {
+  TastingNoteModelImpl(this._database);
 
-  final TastingNoteDatabase database;
+  final TastingNoteDatabase _database;
   final _allTastingNotesSubject = BehaviorSubject.seeded(<TastingNote>[]);
 
   @override
@@ -17,11 +17,11 @@ class TastingNoteModelImpl extends TastingNoteModel {
 
   @override
   Future<void> fetchAll() async {
-    final entityList = await database.allTastingNotes();
+    final entityList = await _database.allTastingNotes();
     final noteListTask = entityList.map((e) async {
-      final sakeEntity = await database.findSakeByID(e.sakeID);
+      final sakeEntity = await _database.findSakeByID(e.sakeID);
       final breweryEntity =
-          await database.findBreweryByID(sakeEntity.breweryID);
+          await _database.findBreweryByID(sakeEntity.breweryID);
       return TastingNote.create(e, sakeEntity, breweryEntity);
     });
     final noteList = (await Future.wait(noteListTask)).toList();
@@ -31,6 +31,6 @@ class TastingNoteModelImpl extends TastingNoteModel {
   @override
   Future<void> close() async {
     await _allTastingNotesSubject.close();
-    await database.close();
+    await _database.close();
   }
 }

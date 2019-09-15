@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EditTastingNoteScene extends StatelessWidget {
+  static const String name = '/edit';
+
   @override
   Widget build(BuildContext context) {
     final bloc = EditTastingNoteProvider.of(context);
-    bloc.onBuild.add(null);
     return Scaffold(
       appBar: AppBar(
         title: const Text('ティスティングノート'),
@@ -84,40 +85,61 @@ class _Body extends StatelessWidget {
             ),
           ),
         ),
-        _SaveSuccessSnackBar(bloc.showSaveSuccessToast)
+        _DismissHandler(bloc.dismiss),
+        _OnBuildSubscription(onBuild: bloc.onBuild),
       ],
     );
   }
 }
 
 @immutable
-class _SaveSuccessSnackBar extends StatefulWidget {
-  const _SaveSuccessSnackBar(this.showSaveSuccessSnackBar);
+class _DismissHandler extends StatefulWidget {
+  const _DismissHandler(this.dismiss);
 
-  final Observable<dynamic> showSaveSuccessSnackBar;
+  final Observable<void> dismiss;
   @override
-  State<StatefulWidget> createState() => _SaveSuccessSnackBarState();
+  State<StatefulWidget> createState() => _DismissHandlerState();
 }
 
-class _SaveSuccessSnackBarState extends State<_SaveSuccessSnackBar> {
-  StreamSubscription<dynamic> _subscription;
+class _DismissHandlerState extends State<_DismissHandler> {
+  StreamSubscription<void> _subscription;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      _subscription = widget.showSaveSuccessSnackBar.listen((dynamic _) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: const Text('保存しました'),
-        ));
+      _subscription = widget.dismiss.listen((_) {
+        Navigator.of(context).pop();
       });
     });
   }
 
   @override
   void dispose() async {
-    await _subscription.cancel();
     super.dispose();
+    await _subscription.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) => Container();
+}
+
+@immutable
+class _OnBuildSubscription extends StatefulWidget {
+  const _OnBuildSubscription({Key key, this.onBuild}) : super(key: key);
+
+  final PublishSubject<void> onBuild;
+  @override
+  State<StatefulWidget> createState() => _OnBuildSubscriptionState();
+}
+
+class _OnBuildSubscriptionState extends State<_OnBuildSubscription> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      widget.onBuild.add(null);
+    });
   }
 
   @override

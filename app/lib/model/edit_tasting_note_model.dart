@@ -10,6 +10,7 @@ abstract class EditTastingNoteModel {
       EditTastingNoteModelImpl(database);
   Observable<TastingNote> get editingTarget;
   Observable<bool> get canSave;
+  Observable<TastingNote> get onSaveSuccess;
   Observable<Result<TastingNote>> saveResult(TastingNoteID id);
   Future<void> startEditing();
   Future<void> save();

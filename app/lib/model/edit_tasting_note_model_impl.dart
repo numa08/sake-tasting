@@ -12,6 +12,9 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
   final _saveResultSubject = PublishSubject<Result<TastingNote>>();
   @override
   Observable<TastingNote> get editingTarget => _editingTargetSubject;
+  @override
+  Observable<TastingNote> get onSaveSuccess =>
+      _saveResultSubject.where((t) => t.isValue).map((t) => t.asValue.value);
 
   @override
   Observable<bool> get canSave => _editingTargetSubject.map((note) {
@@ -23,7 +26,7 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
             note.brewery.name != null &&
             note.comment != null &&
             note.createdAt != null;
-      }).doOnData((c) => print('$c'));
+      });
 
   @override
   Future<void> save() async {

@@ -126,4 +126,151 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
     await _saveResultSubject.close();
     await _editingTargetSubject.close();
   }
+
+  @override
+  void setAppearanceSoundness(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(appearanceSoundness: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setAppearanceHueComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(appearanceHueComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setAppearanceViscosityComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(appearanceViscosityComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setFragranceSoundness(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(fragranceSoundness: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setFragranceStrengthComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(fragranceStrengthComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setFragranceExample(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(fragranceExample: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setFragranceMainly(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(fragranceMainly: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setFragranceComplexityComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(fragranceComplexityComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setTasteSoundness(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(tasteSoundness: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setTasteAttackComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(tasteAttackComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setTasteTexture(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(tasteTexture: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setTasteExample(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(tasteExample: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setTasteSweetnessComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(tasteSweetnessComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setAfterFlavorStrengthComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(afterFlavorStrengthComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setAfterFlavorExample(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(afterFlavorExample: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setReverberationStrengthComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(reverberationStrengthComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setReverberationExample(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(reverberationExample: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setTasteComplexityComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(tasteComplexityComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setIndividuality(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(individuality: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setNoticeComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(noticeComment: value);
+    _editingTargetSubject.add(newValue);
+  }
+
+  @override
+  void setFlavorTypeComment(String value) {
+    final current = _editingTargetSubject.value;
+    final newValue = current.copyTo(flavorTypeComment: value);
+    _editingTargetSubject.add(newValue);
+  }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/bloc/top_bloc.dart';
 import 'package:app/model/model.dart';
 import 'package:app/scene/edit_tasting_note/index.dart';
+import 'package:app/scene/show_tasting_note/index.dart';
 import 'package:app/services/service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ class TopScene extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = TopProvider.of(context);
-    bloc.onBuildView.add(null);
     return Scaffold(
       appBar: AppBar(
         title: const Text('ティスティングノート'),
@@ -60,27 +60,34 @@ class _Body extends StatelessWidget {
                   itemCount: notes.length,
                   itemBuilder: (context, index) {
                     final note = notes[index];
-                    return Card(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Image.file(
-                            note.images.first.image,
-                            height: 240,
-                            fit: BoxFit.fitWidth,
-                          ),
-                          ListTile(
-                            title: Text(note.sake.name),
-                            subtitle: Text(note.brewery.name),
-                          )
-                        ],
+                    return InkWell(
+                      onTap: () => bloc.selectCard.add(index),
+                      child: Card(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Image.file(
+                              note.images.first.image,
+                              height: 240,
+                              fit: BoxFit.fitWidth,
+                            ),
+                            ListTile(
+                              title: Text(note.sake.name),
+                              subtitle: Text(note.brewery.name),
+                            )
+                          ],
+                        ),
                       ),
                     );
                   });
             },
           ),
         ),
-        _SaveSuccessSnackBar(bloc.showSaveSuccessToast)
+        _SaveSuccessSnackBar(bloc.showSaveSuccessToast),
+        _OnBuildSubscription(onBuild: bloc.onBuildView),
+        _ShowTastingNote(
+          showTastingNote: bloc.showTastingNote,
+        )
       ],
     );
   }
@@ -106,6 +113,61 @@ class _SaveSuccessSnackBarState extends State<_SaveSuccessSnackBar> {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: const Text('保存しました'),
         ));
+      });
+    });
+  }
+
+  @override
+  void dispose() async {
+    await _subscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Container();
+}
+
+class _OnBuildSubscription extends StatefulWidget {
+  const _OnBuildSubscription({Key key, this.onBuild}) : super(key: key);
+
+  final PublishSubject<void> onBuild;
+
+  @override
+  State<StatefulWidget> createState() => _OnBuildSubscriptionState();
+}
+
+class _OnBuildSubscriptionState extends State<_OnBuildSubscription> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      widget.onBuild.add(null);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Container();
+}
+
+class _ShowTastingNote extends StatefulWidget {
+  const _ShowTastingNote({Key key, this.showTastingNote}) : super(key: key);
+
+  final Observable<TastingNoteID> showTastingNote;
+
+  @override
+  State<StatefulWidget> createState() => _ShowTastingNoteState();
+}
+
+class _ShowTastingNoteState extends State<_ShowTastingNote> {
+  StreamSubscription<dynamic> _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _subscription = widget.showTastingNote.listen((id) {
+        Navigator.of(context).pushNamed(ShowTastingNoteScene.name,
+            arguments: ShowTastingNoteSceneArgument(id));
       });
     });
   }

@@ -18,24 +18,17 @@ class EditTastingNoteBloc implements Bloc {
       ..add(onClickSaveButton.listen((_) {
         editTastingNoteModel.save();
       }))
-      ..add(onAddImage.listen(editTastingNoteModel.addImage))
-      ..add(onDeleteImage.listen((index) async {
-        final file = await editTastingNoteModel.deleteImage(index - 1);
-        _showRestoreImageBar.add(file);
-      }));
-    editTastingNoteModel.canSave.pipe(_enableSaveButtonSubject);
-    editTastingNoteModel.editingTarget
-        .where((t) => t != null)
-        .switchMap((t) => editTastingNoteModel.saveResult(t.id))
-        .whereType<ValueResult<TastingNote>>()
-        .mapTo(null)
-        .cast<void>()
-        .pipe(_dismissSubject);
+      ..add(onAddImage.listen(editTastingNoteModel.addImage));
   }
 
   final EditTastingNoteModel editTastingNoteModel;
-  Observable<bool> get enableSaveButton => _enableSaveButtonSubject;
-  Observable<void> get dismiss => _dismissSubject;
+  Observable<bool> get enableSaveButton => editTastingNoteModel.canSave;
+  Observable<void> get dismiss => editTastingNoteModel.editingTarget
+      .where((t) => t != null)
+      .switchMap((t) => editTastingNoteModel.saveResult(t.id))
+      .whereType<ValueResult<TastingNote>>()
+      .mapTo(null)
+      .cast<void>();
   Observable<List<ImageResource>> get images => editTastingNoteModel.images
       .map((l) => <ImageResource>[AddPhotoIconImage()]
         ..addAll(l.map((i) => FileImageResource(i.image))))
@@ -43,7 +36,8 @@ class EditTastingNoteBloc implements Bloc {
   Observable<File> get showImage => onTapImage.withLatestFrom(
       editTastingNoteModel.images,
       (index, List<TastingNoteImage> images) => images[index - 1].image);
-  Observable<File> get showRestoreImageBar => _showRestoreImageBar;
+  Observable<File> get showRestoreImageBar => onDeleteImage.flatMap((index) =>
+      Observable.fromFuture(editTastingNoteModel.deleteImage(index - 1)));
   final PublishSubject<void> onBuild = PublishSubject<void>();
   final PublishSubject<String> onChangeBreweryName = PublishSubject<String>();
   final PublishSubject<String> onChangeSakeName = PublishSubject<String>();
@@ -53,9 +47,6 @@ class EditTastingNoteBloc implements Bloc {
   final PublishSubject<int> onDeleteImage = PublishSubject<int>();
   final PublishSubject<int> onTapImage = PublishSubject<int>();
 
-  final _enableSaveButtonSubject = PublishSubject<bool>();
-  final _dismissSubject = PublishSubject<void>();
-  final _showRestoreImageBar = PublishSubject<File>();
   final _subscriptions = <StreamSubscription<dynamic>>[];
 
   @override
@@ -66,13 +57,9 @@ class EditTastingNoteBloc implements Bloc {
     await onChangeSakeName.close();
     await onChangeComment.close();
     await onClickSaveButton.close();
-    await _enableSaveButtonSubject.close();
-    await _dismissSubject.close();
     await onAddImage.close();
     await onDeleteImage.close();
-    await _showRestoreImageBar.close();
     await onTapImage.close();
-    await editTastingNoteModel.close();
   }
 }
 

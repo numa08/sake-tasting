@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/data/database/database.dart';
 import 'package:app/model/model.dart';
 import 'package:app/scene/edit_tasting_note/index.dart';
+import 'package:app/scene/show_tasting_note/index.dart';
 import 'package:app/scene/top/index.dart';
 import 'package:app/services/service.dart';
 import 'package:bloc_provider/bloc_provider.dart';
@@ -47,13 +48,18 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) => BlocProviderTree(
-        blocProviders: [EditTastingNoteProvider(), TopProvider()],
+        blocProviders: [
+          EditTastingNoteProvider(),
+          TopProvider(),
+          ShowTastingNoteProvider()
+        ],
         child: MaterialApp(
           title: 'ティスティングノート',
           theme: ThemeData(),
           home: TopScene(),
           routes: {
-            EditTastingNoteScene.name: (context) => EditTastingNoteScene()
+            EditTastingNoteScene.name: (context) => EditTastingNoteScene(),
+            ShowTastingNoteScene.name: (context) => ShowTastingNoteScene(),
           },
         ),
       );
@@ -61,6 +67,9 @@ class _AppState extends State<App> {
   @override
   void dispose() async {
     await Future.wait<dynamic>(_subscriptions.map((s) => s.cancel()));
+    final serviceProvider = ServiceProvider.of(context);
+    await serviceProvider.editTastingNoteModel.close();
+    await serviceProvider.tastingNoteModel.close();
     super.dispose();
   }
 }

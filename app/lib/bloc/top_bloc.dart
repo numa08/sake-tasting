@@ -12,22 +12,23 @@ class TopBloc implements Bloc {
             .listen((_) {
       _tastingNoteModel.fetchAll();
     }));
-    _editTastingNoteModel.editingTarget
-        .where((t) => t != null)
-        .switchMap((t) => _editTastingNoteModel.saveResult(t.id))
-        .whereType<ValueResult<TastingNote>>()
-        .cast<dynamic>()
-        .pipe(_showSaveSuccessToastSubject);
   }
 
   Observable<List<TastingNote>> get allNotes =>
       _tastingNoteModel.allTastingNotes;
-  Observable<dynamic> get showSaveSuccessToast => _showSaveSuccessToastSubject;
+  Observable<dynamic> get showSaveSuccessToast =>
+      _editTastingNoteModel.editingTarget
+          .where((t) => t != null)
+          .switchMap((t) => _editTastingNoteModel.saveResult(t.id))
+          .whereType<ValueResult<TastingNote>>()
+          .cast<dynamic>();
+  Observable<TastingNoteID> get showTastingNote => selectCard.withLatestFrom(
+      allNotes, (index, List<TastingNote> list) => list[index].id);
   final PublishSubject<void> onBuildView = PublishSubject<void>();
   final PublishSubject<void> onPullToRefresh = PublishSubject<void>();
+  final PublishSubject<int> selectCard = PublishSubject<int>();
   final TastingNoteModel _tastingNoteModel;
   final EditTastingNoteModel _editTastingNoteModel;
-  final _showSaveSuccessToastSubject = PublishSubject<dynamic>();
   final List<StreamSubscription<dynamic>> _subscription = [];
 
   @override
@@ -35,7 +36,6 @@ class TopBloc implements Bloc {
     await Future.wait<dynamic>(_subscription.map((s) => s.cancel()));
     await onBuildView.close();
     await onPullToRefresh.close();
-    await _tastingNoteModel.close();
-    await _showSaveSuccessToastSubject.close();
+    await selectCard.close();
   }
 }

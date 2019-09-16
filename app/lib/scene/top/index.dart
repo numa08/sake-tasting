@@ -60,7 +60,22 @@ class _Body extends StatelessWidget {
                   itemCount: notes.length,
                   itemBuilder: (context, index) {
                     final note = notes[index];
-                    return Text('${note.sake.name} at ${note.brewery.name}');
+                    return Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Image.file(
+                            note.images.first.image,
+                            height: 240,
+                            fit: BoxFit.fitWidth,
+                          ),
+                          ListTile(
+                            title: Text(note.sake.name),
+                            subtitle: Text(note.brewery.name),
+                          )
+                        ],
+                      ),
+                    );
                   });
             },
           ),

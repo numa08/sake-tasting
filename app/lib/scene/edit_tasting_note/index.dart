@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:app/bloc/bloc.dart';
 import 'package:app/services/service.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EditTastingNoteScene extends StatelessWidget {
@@ -23,6 +25,9 @@ class EditTastingNoteScene extends StatelessWidget {
       floatingActionButton: StreamBuilder<bool>(
         stream: bloc.enableSaveButton,
         builder: (context, data) => FloatingActionButton(
+          backgroundColor: (data.data != null && data.data)
+              ? Theme.of(context).accentColor
+              : Colors.grey,
           onPressed: (data.data != null && data.data)
               ? () => bloc.onClickSaveButton.add(null)
               : null,
@@ -49,6 +54,96 @@ class _Body extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                Container(
+                  height: 112,
+                  child: StreamBuilder<List<ImageResource>>(
+                    stream: bloc.images,
+                    builder: (context, data) {
+                      if (!data.hasData) {
+                        return Container();
+                      }
+                      return ListView.separated(
+                          separatorBuilder: (context, index) => const SizedBox(
+                                width: 12,
+                              ),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: data.data.length,
+                          itemBuilder: (context, index) {
+                            final image = data.data[index];
+                            switch (image.runtimeType) {
+                              case AddPhotoIconImage:
+                                return Container(
+                                  height: 96,
+                                  width: 96,
+                                  child: RaisedButton.icon(
+                                    label: const Text(''),
+                                    icon: Icon(Icons.add_a_photo),
+                                    onPressed: () {
+                                      showDialog<void>(
+                                          context: context,
+                                          builder: (context) => SimpleDialog(
+                                                title: const Text('画像を追加'),
+                                                children: <Widget>[
+                                                  SimpleDialogOption(
+                                                    child: const Text('カメラで撮影'),
+                                                    onPressed: () {
+                                                      _pickImage(
+                                                          ImageSource.camera);
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                  SimpleDialogOption(
+                                                    child:
+                                                        const Text('ギャラリーから選択'),
+                                                    onPressed: () {
+                                                      _pickImage(
+                                                          ImageSource.gallery);
+                                                      Navigator.pop(context);
+                                                    },
+                                                  )
+                                                ],
+                                              ));
+                                    },
+                                  ),
+                                );
+                              case FileImageResource:
+                                final fileImage = image as FileImageResource;
+                                return SizedBox(
+                                  width: 96,
+                                  height: 96,
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Image.file(
+                                        fileImage.file,
+                                        width: 96,
+                                        height: 96,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: <Widget>[
+                                          IconButton(
+                                            icon: Icon(Icons.close),
+                                            onPressed: () =>
+                                                bloc.onDeleteImage.add(index),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                );
+                              default:
+                                return null;
+                            }
+                          });
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
                 TextField(
                   decoration: InputDecoration(
                       border: UnderlineInputBorder(),
@@ -87,8 +182,20 @@ class _Body extends StatelessWidget {
         ),
         _DismissHandler(bloc.dismiss),
         _OnBuildSubscription(onBuild: bloc.onBuild),
+        _ShowRestoreImageSnackBar(
+          showRestoreImageSnackBar: bloc.showRestoreImageBar,
+          restoreImage: bloc.onAddImage,
+        )
       ],
     );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final image = await ImagePicker.pickImage(source: source);
+    if (image == null) {
+      return;
+    }
+    bloc.onAddImage.add(image);
   }
 }
 
@@ -140,6 +247,46 @@ class _OnBuildSubscriptionState extends State<_OnBuildSubscription> {
     setState(() {
       widget.onBuild.add(null);
     });
+  }
+
+  @override
+  Widget build(BuildContext context) => Container();
+}
+
+class _ShowRestoreImageSnackBar extends StatefulWidget {
+  const _ShowRestoreImageSnackBar(
+      {Key key, this.showRestoreImageSnackBar, this.restoreImage})
+      : super(key: key);
+
+  final Observable<File> showRestoreImageSnackBar;
+  final PublishSubject<File> restoreImage;
+  @override
+  State<StatefulWidget> createState() => _ShowRestoreImageSnackBarState();
+}
+
+class _ShowRestoreImageSnackBarState extends State<_ShowRestoreImageSnackBar> {
+  StreamSubscription<void> _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _subscription = widget.showRestoreImageSnackBar.listen((file) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: const Text('画像を削除しました'),
+          action: SnackBarAction(
+            label: 'キャンセル',
+            onPressed: () => widget.restoreImage.add(file),
+          ),
+        ));
+      });
+    });
+  }
+
+  @override
+  void dispose() async {
+    super.dispose();
+    await _subscription.cancel();
   }
 
   @override

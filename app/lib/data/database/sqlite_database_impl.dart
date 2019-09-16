@@ -1,5 +1,6 @@
 import 'package:app/data/database/database.dart';
 import 'package:app/data/database/entitiy/brewery.dart';
+import 'package:app/data/database/entitiy/entity.dart';
 import 'package:app/data/database/entitiy/sake.dart';
 import 'package:app/data/database/entitiy/tasting_note.dart';
 import 'package:sqflite/sqflite.dart';
@@ -45,6 +46,14 @@ class SQLiteDatabaseImpl implements TastingNoteDatabase {
     return entity == null ? null : Sake.fromJSON(entity);
   }
 
+  @override
+  Future<List<TastingNoteImage>> findImage(String tastingNoteID) async {
+    final database = await _databaseManager.database;
+    final entities = await database.query('tasting_note_image',
+        where: 'tasting_note_id = ?', whereArgs: <String>[tastingNoteID]);
+    return entities.map((e) => TastingNoteImage.fromJSON(e)).toList();
+  }
+
   Future<Map<String, dynamic>> _findByID(String table, String id) async {
     final database = await _databaseManager.database;
     final entity =
@@ -68,6 +77,12 @@ class SQLiteDatabaseImpl implements TastingNoteDatabase {
   Future<void> saveSake(Sake sake) async {
     final database = await _databaseManager.database;
     await database.insert('sake', sake.toJSON());
+  }
+
+  @override
+  Future<void> saveImage(TastingNoteImage image) async {
+    final database = await _databaseManager.database;
+    await database.insert('tasting_note_image', image.toJSON());
   }
 
   @override
@@ -95,9 +110,9 @@ class _DatabaseManager {
 );
 ''');
         await db.execute('''
-CREATE TABLE IF NOT EXISTS "tasting_image" (
+CREATE TABLE IF NOT EXISTS "tasting_note_image" (
 	"id"	TEXT NOT NULL,
-	"url"	TEXT NOT NULL,
+	"name"	TEXT NOT NULL,
 	"tasting_note_id"	TEXT NOT NULL,
 	PRIMARY KEY("id"),
 	FOREIGN KEY("tasting_note_id") REFERENCES "tasting_note"("id")

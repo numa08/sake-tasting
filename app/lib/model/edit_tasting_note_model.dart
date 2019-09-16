@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app/data/database/database.dart';
 import 'package:app/model/model.dart';
 import 'package:async/async.dart';
@@ -11,6 +13,7 @@ abstract class EditTastingNoteModel {
   Observable<TastingNote> get editingTarget;
   Observable<bool> get canSave;
   Observable<TastingNote> get onSaveSuccess;
+  Observable<List<TastingNoteImage>> get images;
   Observable<Result<TastingNote>> saveResult(TastingNoteID id);
   Future<void> startEditing();
   Future<void> save();
@@ -18,4 +21,6 @@ abstract class EditTastingNoteModel {
   void setSakeName(String sakeName);
   void setBreweryName(String breweryName);
   void setComment(String comment);
+  void addImage(File image);
+  Future<File> deleteImage(int index);
 }

@@ -22,6 +22,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>ティスティングノートに画像を追加するため、カメラへのアクセスが必要です</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>ティスティングノートに画像を追加するため、ギャラリーへのアクセスが必要です</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

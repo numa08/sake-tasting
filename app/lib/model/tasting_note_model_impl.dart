@@ -1,5 +1,6 @@
 import 'package:app/data/database/database.dart';
 import 'package:app/model/model.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class TastingNoteModelImpl implements TastingNoteModel {
@@ -22,7 +23,9 @@ class TastingNoteModelImpl implements TastingNoteModel {
       final sakeEntity = await _database.findSakeByID(e.sakeID);
       final breweryEntity =
           await _database.findBreweryByID(sakeEntity.breweryID);
-      return TastingNote.create(e, sakeEntity, breweryEntity);
+      final images = await _database.findImage(e.tastingNoteID);
+      return TastingNote.create(e, sakeEntity, breweryEntity, images,
+          (await getApplicationDocumentsDirectory()).path);
     });
     final noteList = (await Future.wait(noteListTask)).toList();
     _allTastingNotesSubject.add(noteList);

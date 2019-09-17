@@ -31,6 +31,11 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
       Observable.combineLatest2<TastingNote, List<TastingNoteImage>, bool>(
           _editingTargetSubject, _tastingNoteImagesSubject,
           (TastingNote note, List<TastingNoteImage> images) {
+        final valueIsFill = StringValueField.values
+            .where((f) => !isNullableStringValueField(f))
+            .map((f) => note.stringField[f])
+            .any((v) => v != null && v.isNotEmpty);
+
         return note != null &&
             note.id != null &&
             note.sake != null &&
@@ -39,10 +44,9 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
             note.brewery != null &&
             note.brewery.name != null &&
             note.brewery.name.isNotEmpty &&
-            note.comment != null &&
-            note.comment.isNotEmpty &&
             note.createdAt != null &&
-            images.isNotEmpty;
+            images.isNotEmpty &&
+            valueIsFill;
       });
 
   @override
@@ -82,13 +86,6 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
   }
 
   @override
-  void setComment(String comment) {
-    final value = _editingTargetSubject.value;
-    final newValue = value.copyTo(comment: comment);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
   void setSakeName(String sakeName) {
     final value = _editingTargetSubject.value;
     final newValue = value.copyTo(sake: value.sake.copyTo(name: sakeName));
@@ -117,6 +114,7 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
         id: TastingNoteID(value: _uuid.v4()),
         sake: Sake(id: SakeID(value: _uuid.v4())),
         brewery: Brewery(id: BreweryID(value: _uuid.v4())),
+        stringField: const {},
         createdAt: DateTime.now()));
   }
 
@@ -128,149 +126,11 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
   }
 
   @override
-  void setAppearanceSoundness(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(appearanceSoundness: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setAppearanceHueComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(appearanceHueComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setAppearanceViscosityComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(appearanceViscosityComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setFragranceSoundness(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(fragranceSoundness: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setFragranceStrengthComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(fragranceStrengthComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setFragranceExample(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(fragranceExample: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setFragranceMainly(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(fragranceMainly: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setFragranceComplexityComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(fragranceComplexityComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setTasteSoundness(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(tasteSoundness: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setTasteAttackComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(tasteAttackComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setTasteTexture(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(tasteTexture: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setTasteExample(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(tasteExample: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setTasteSweetnessComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(tasteSweetnessComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setAfterFlavorStrengthComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(afterFlavorStrengthComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setAfterFlavorExample(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(afterFlavorExample: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setReverberationStrengthComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(reverberationStrengthComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setReverberationExample(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(reverberationExample: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setTasteComplexityComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(tasteComplexityComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setIndividuality(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(individuality: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setNoticeComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(noticeComment: value);
-    _editingTargetSubject.add(newValue);
-  }
-
-  @override
-  void setFlavorTypeComment(String value) {
-    final current = _editingTargetSubject.value;
-    final newValue = current.copyTo(flavorTypeComment: value);
-    _editingTargetSubject.add(newValue);
+  void setStringField(StringValueField field, String value) {
+    final target = _editingTargetSubject.value;
+    final fields = target.stringField;
+    fields[field] = value;
+    final newTarget = target.copyTo(stringField: fields);
+    _editingTargetSubject.add(newTarget);
   }
 }

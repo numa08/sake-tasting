@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:app/bloc/bloc.dart';
+import 'package:app/model/model.dart';
 import 'package:app/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -170,7 +171,8 @@ class _Body extends StatelessWidget {
                 TextField(
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
-                  onChanged: bloc.onChangeComment.add,
+                  onChanged: (v) => bloc.onUpdateStringField
+                      .add(StringFieldValue(StringValueField.comment, v)),
                   decoration: InputDecoration(
                       border: UnderlineInputBorder(),
                       hintText: '',

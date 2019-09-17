@@ -6,6 +6,12 @@ import 'package:async/async.dart';
 import 'package:bloc_provider/bloc_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
+class StringFieldValue {
+  StringFieldValue(this.field, this.value);
+  final StringValueField field;
+  final String value;
+}
+
 class EditTastingNoteBloc implements Bloc {
   EditTastingNoteBloc(this.editTastingNoteModel) {
     _subscriptions
@@ -14,11 +20,12 @@ class EditTastingNoteBloc implements Bloc {
       }))
       ..add(onChangeBreweryName.listen(editTastingNoteModel.setBreweryName))
       ..add(onChangeSakeName.listen(editTastingNoteModel.setSakeName))
-      ..add(onChangeComment.listen(editTastingNoteModel.setComment))
       ..add(onClickSaveButton.listen((_) {
         editTastingNoteModel.save();
       }))
-      ..add(onAddImage.listen(editTastingNoteModel.addImage));
+      ..add(onAddImage.listen(editTastingNoteModel.addImage))
+      ..add(onUpdateStringField.listen(
+          (v) => editTastingNoteModel.setStringField(v.field, v.value)));
   }
 
   final EditTastingNoteModel editTastingNoteModel;
@@ -41,11 +48,12 @@ class EditTastingNoteBloc implements Bloc {
   final PublishSubject<void> onBuild = PublishSubject<void>();
   final PublishSubject<String> onChangeBreweryName = PublishSubject<String>();
   final PublishSubject<String> onChangeSakeName = PublishSubject<String>();
-  final PublishSubject<String> onChangeComment = PublishSubject<String>();
   final PublishSubject<void> onClickSaveButton = PublishSubject<void>();
   final PublishSubject<File> onAddImage = PublishSubject<File>();
   final PublishSubject<int> onDeleteImage = PublishSubject<int>();
   final PublishSubject<int> onTapImage = PublishSubject<int>();
+  final PublishSubject<StringFieldValue> onUpdateStringField =
+      PublishSubject<StringFieldValue>();
 
   final _subscriptions = <StreamSubscription<dynamic>>[];
 
@@ -55,11 +63,11 @@ class EditTastingNoteBloc implements Bloc {
     await onBuild.close();
     await onChangeBreweryName.close();
     await onChangeSakeName.close();
-    await onChangeComment.close();
     await onClickSaveButton.close();
     await onAddImage.close();
     await onDeleteImage.close();
     await onTapImage.close();
+    await onUpdateStringField.close();
   }
 }
 

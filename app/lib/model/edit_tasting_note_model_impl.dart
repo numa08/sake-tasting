@@ -31,6 +31,9 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
       Observable.combineLatest2<TastingNote, List<TastingNoteImage>, bool>(
           _editingTargetSubject, _tastingNoteImagesSubject,
           (TastingNote note, List<TastingNoteImage> images) {
+        if (note == null) {
+          return false;
+        }
         final valueIsFill = StringValueField.values
             .where((f) => !isNullableStringValueField(f))
             .map((f) => note.stringField[f])
@@ -128,7 +131,7 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
   @override
   void setStringField(StringValueField field, String value) {
     final target = _editingTargetSubject.value;
-    final fields = target.stringField;
+    final fields = Map.of(target.stringField);
     fields[field] = value;
     final newTarget = target.copyTo(stringField: fields);
     _editingTargetSubject.add(newTarget);

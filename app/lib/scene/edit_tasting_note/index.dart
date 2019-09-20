@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:app/bloc/bloc.dart';
-import 'package:app/model/model.dart';
+import 'package:app/scene/edit_tasting_note/edit_form.dart';
 import 'package:app/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -168,16 +168,82 @@ class _Body extends StatelessWidget {
                 const SizedBox(
                   height: 24,
                 ),
-                TextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  onChanged: (v) => bloc.onUpdateStringField
-                      .add(StringFieldValue(StringValueField.comment, v)),
-                  decoration: InputDecoration(
-                      border: UnderlineInputBorder(),
-                      hintText: '',
-                      labelText: 'ティスティングノート'),
-                )
+                Container(
+                  child: ListTile(
+                      title: Text(
+                        '外観',
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                      trailing: Icon(Icons.arrow_right),
+                      onTap: () =>
+                          Navigator.of(context).push(MaterialPageRoute<Object>(
+                              builder: (context) => EditForm(
+                                    title: '外観',
+                                    listItem: bloc.editAppearanceListItem,
+                                  )))),
+                  decoration:
+                      BoxDecoration(border: Border(bottom: BorderSide())),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                Container(
+                  child: ListTile(
+                    title: Text(
+                      '香り',
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    trailing: Icon(Icons.arrow_right),
+                    onTap: () =>
+                        Navigator.of(context).push(MaterialPageRoute<Object>(
+                            builder: (context) => EditForm(
+                                  title: '香り',
+                                  listItem: bloc.editFragranceListItem,
+                                ))),
+                  ),
+                  decoration:
+                      BoxDecoration(border: Border(bottom: BorderSide())),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                Container(
+                  child: ListTile(
+                    title: Text(
+                      '味わい',
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    trailing: Icon(Icons.arrow_right),
+                    onTap: () =>
+                        Navigator.of(context).push(MaterialPageRoute<Object>(
+                            builder: (context) => EditForm(
+                                  title: '味わい',
+                                  listItem: bloc.editTasteListItem,
+                                ))),
+                  ),
+                  decoration:
+                      BoxDecoration(border: Border(bottom: BorderSide())),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                Container(
+                  child: ListTile(
+                    title: Text(
+                      '個性の抽出',
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    trailing: Icon(Icons.arrow_right),
+                    onTap: () =>
+                        Navigator.of(context).push(MaterialPageRoute<Object>(
+                            builder: (context) => EditForm(
+                                  title: '個性の抽出',
+                                  listItem: bloc.editIndividualityListItem,
+                                ))),
+                  ),
+                  decoration:
+                      BoxDecoration(border: Border(bottom: BorderSide())),
+                ),
               ],
             ),
           ),

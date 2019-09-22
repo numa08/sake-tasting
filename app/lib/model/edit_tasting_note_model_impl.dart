@@ -31,14 +31,6 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
       Observable.combineLatest2<TastingNote, List<TastingNoteImage>, bool>(
           _editingTargetSubject, _tastingNoteImagesSubject,
           (TastingNote note, List<TastingNoteImage> images) {
-        if (note == null) {
-          return false;
-        }
-        final valueIsFill = StringValueField.values
-            .where((f) => !isNullableStringValueField(f))
-            .map((f) => note.stringField[f])
-            .any((v) => v != null && v.isNotEmpty);
-
         return note != null &&
             note.id != null &&
             note.sake != null &&
@@ -48,8 +40,7 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
             note.brewery.name != null &&
             note.brewery.name.isNotEmpty &&
             note.createdAt != null &&
-            images.isNotEmpty &&
-            valueIsFill;
+            images.isNotEmpty;
       });
 
   @override

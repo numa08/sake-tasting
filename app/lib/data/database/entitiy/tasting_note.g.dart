@@ -9,7 +9,6 @@ part of 'tasting_note.dart';
 _SQLiteTastingNote _$_SQLiteTastingNoteFromJson(Map<String, dynamic> json) {
   return _SQLiteTastingNote(
     json['id'] as String,
-    json['comment'] as String,
     json['sake_id'] as String,
     json['created_at_utc'] as int,
     json['appearance_soundness'] as String,
@@ -39,7 +38,6 @@ _SQLiteTastingNote _$_SQLiteTastingNoteFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$_SQLiteTastingNoteToJson(_SQLiteTastingNote instance) =>
     <String, dynamic>{
       'id': instance.tastingNoteID,
-      'comment': instance.comment,
       'sake_id': instance.sakeID,
       'created_at_utc': instance.createdAtUTC,
       'appearance_soundness': instance.appearanceSoundness,

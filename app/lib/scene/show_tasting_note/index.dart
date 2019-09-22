@@ -54,7 +54,6 @@ class _Body extends StatelessWidget {
                       ListTile(
                         title: Text(tastingNote.brewery.name),
                       ),
-                      Text(tastingNote.stringField[StringValueField.comment]),
                     ],
                   );
                 })),

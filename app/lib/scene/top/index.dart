@@ -72,7 +72,10 @@ class _Body extends StatelessWidget {
                               fit: BoxFit.fitWidth,
                             ),
                             ListTile(
-                              title: Text(note.sake.name),
+                              title: Text(
+                                '（${note.isDraft ? '下書き' : ''}）'
+                                '${note.sake.name} '
+                                  ),
                               subtitle: Text(note.brewery.name),
                             )
                           ],

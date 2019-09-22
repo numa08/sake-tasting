@@ -12,7 +12,7 @@ import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 
 void main() async {
-//  await Sqflite.setDebugModeOn(true);
+ await Sqflite.setDebugModeOn(true);
   final database =
       TastingNoteDatabase(p.join(await getDatabasesPath(), 'sake_tasting.db'));
 

@@ -9,7 +9,6 @@ abstract class TastingNote extends Equatable {
       _$_SQLiteTastingNoteFromJson(json);
   factory TastingNote.crate(
           {String tastingNoteID,
-          String comment,
           String sakeID,
           String appearanceSoundness,
           String appearanceHueComment,
@@ -35,7 +34,6 @@ abstract class TastingNote extends Equatable {
           int createdAtUTC}) =>
       _SQLiteTastingNote(
           tastingNoteID,
-          comment,
           sakeID,
           createdAtUTC,
           appearanceSoundness,
@@ -60,7 +58,6 @@ abstract class TastingNote extends Equatable {
           noticeComment,
           flavorTypeComment);
   String get tastingNoteID;
-  String get comment;
   String get sakeID;
   String get appearanceSoundness;
   String get appearanceHueComment;
@@ -91,7 +88,6 @@ abstract class TastingNote extends Equatable {
 class _SQLiteTastingNote extends TastingNote {
   _SQLiteTastingNote(
       this.tastingNoteID,
-      this.comment,
       this.sakeID,
       this.createdAtUTC,
       this.appearanceSoundness,
@@ -115,12 +111,10 @@ class _SQLiteTastingNote extends TastingNote {
       this.individuality,
       this.noticeComment,
       this.flavorTypeComment)
-      : super(<dynamic>[tastingNoteID, comment, sakeID, createdAtUTC]);
+      : super(<dynamic>[tastingNoteID, sakeID, createdAtUTC]);
   @override
   @JsonKey(name: 'id')
   final String tastingNoteID;
-  @override
-  final String comment;
   @override
   @JsonKey(name: 'sake_id')
   final String sakeID;

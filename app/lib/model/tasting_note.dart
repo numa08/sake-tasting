@@ -12,7 +12,6 @@ class TastingNoteID extends Equatable {
 }
 
 enum StringValueField {
-  comment,
   appearanceSoundness,
   appearanceHueComment,
   appearanceViscosityComment,
@@ -38,7 +37,6 @@ enum StringValueField {
 
 bool isNullableStringValueField(StringValueField field) {
   switch (field) {
-    case StringValueField.comment:
     case StringValueField.appearanceSoundness:
     case StringValueField.fragranceSoundness:
     case StringValueField.fragranceExample:
@@ -108,7 +106,6 @@ class TastingNote extends Equatable {
         tastingNoteID: id.value,
         sakeID: sake.id.value,
         createdAtUTC: createdAt.toUtc().millisecondsSinceEpoch,
-        comment: stringField[StringValueField.comment],
         appearanceSoundness: stringField[StringValueField.appearanceSoundness],
         appearanceHueComment:
             stringField[StringValueField.appearanceHueComment],
@@ -153,4 +150,8 @@ class TastingNote extends Equatable {
           name: basename(i.image.path),
           tastingNoteID: id.value))
       .toList();
+
+  bool get isDraft =>
+      stringField == null ||
+      stringField.values.where((v) => v == null).isNotEmpty;
 }

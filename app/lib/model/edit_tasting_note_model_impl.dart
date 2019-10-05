@@ -111,6 +111,7 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
         stringField: const {},
         doubleField: const {},
         createdAt: DateTime.now()));
+    _tastingNoteImagesSubject.add([]);
   }
 
   @override

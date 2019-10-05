@@ -35,6 +35,18 @@ enum StringValueField {
   flavorTypeComment
 }
 
+enum DoubleValueField {
+  afterFlavorStrength,
+  appearanceHue,
+  appearanceViscosity,
+  fragranceComplexity,
+  fragranceStrength,
+  reverberationStrength,
+  tasteAttack,
+  tasteComplexity,
+  tasteSweetness
+}
+
 bool isNullableStringValueField(StringValueField field) {
   switch (field) {
     case StringValueField.appearanceSoundness:
@@ -54,14 +66,15 @@ bool isNullableStringValueField(StringValueField field) {
 }
 
 class TastingNote extends Equatable {
-  TastingNote({
-    this.id,
-    this.sake,
-    this.brewery,
-    this.images,
-    this.createdAt,
-    this.stringField,
-  }) : super(<dynamic>[id]);
+  TastingNote(
+      {this.id,
+      this.sake,
+      this.brewery,
+      this.images,
+      this.createdAt,
+      this.stringField,
+      this.doubleField})
+      : super(<dynamic>[id]);
   factory TastingNote.create(e.TastingNote ne, e.Sake se, e.Brewery be,
       List<e.TastingNoteImage> ies, String dataDirectoryPath) {
     final brewery = Brewery(name: be.name, id: BreweryID(value: be.breweryID));
@@ -86,12 +99,14 @@ class TastingNote extends Equatable {
   final List<TastingNoteImage> images;
   final DateTime createdAt;
   final Map<StringValueField, String> stringField;
+  final Map<DoubleValueField, double> doubleField;
 
   TastingNote copyTo({
     Sake sake,
     Brewery brewery,
     List<TastingNoteImage> images,
     Map<StringValueField, String> stringField,
+    Map<DoubleValueField, double> doubleField,
   }) =>
       TastingNote(
         id: id,
@@ -100,43 +115,51 @@ class TastingNote extends Equatable {
         images: images ?? this.images,
         createdAt: createdAt,
         stringField: stringField ?? this.stringField,
+        doubleField: doubleField ?? this.doubleField
       );
 
   e.TastingNote toTastingNoteEntity() => e.TastingNote.crate(
-        tastingNoteID: id.value,
-        sakeID: sake.id.value,
-        createdAtUTC: createdAt.toUtc().millisecondsSinceEpoch,
-        appearanceSoundness: stringField[StringValueField.appearanceSoundness],
-        appearanceHueComment:
-            stringField[StringValueField.appearanceHueComment],
-        appearanceViscosityComment:
-            stringField[StringValueField.appearanceViscosityComment],
-        fragranceSoundness: stringField[StringValueField.fragranceSoundness],
-        fragranceStrengthComment:
-            stringField[StringValueField.fragranceStrengthComment],
-        fragranceExample: stringField[StringValueField.fragranceExample],
-        fragranceMainly: stringField[StringValueField.fragranceMainly],
-        fragranceComplexityComment:
-            stringField[StringValueField.fragranceComplexityComment],
-        tasteSoundness: stringField[StringValueField.tasteSoundness],
-        tasteAttackComment: stringField[StringValueField.tasteAttackComment],
-        tasteTexture: stringField[StringValueField.tasteTexture],
-        tasteExample: stringField[StringValueField.tasteExample],
-        tasteSweetnessComment:
-            stringField[StringValueField.tasteSweetnessComment],
-        afterFlavorStrengthComment:
-            stringField[StringValueField.afterFlavorStrengthComment],
-        afterFlavorExample: stringField[StringValueField.afterFlavorExample],
-        reverberationStrengthComment:
-            stringField[StringValueField.reverberationStrengthComment],
-        reverberationExample:
-            stringField[StringValueField.reverberationExample],
-        tasteComplexityComment:
-            stringField[StringValueField.tasteComplexityComment],
-        individuality: stringField[StringValueField.individuality],
-        noticeComment: stringField[StringValueField.noticeComment],
-        flavorTypeComment: stringField[StringValueField.flavorTypeComment],
-      );
+      tastingNoteID: id.value,
+      sakeID: sake.id.value,
+      createdAtUTC: createdAt.toUtc().millisecondsSinceEpoch,
+      appearanceSoundness: stringField[StringValueField.appearanceSoundness],
+      appearanceHueComment: stringField[StringValueField.appearanceHueComment],
+      appearanceViscosityComment:
+          stringField[StringValueField.appearanceViscosityComment],
+      fragranceSoundness: stringField[StringValueField.fragranceSoundness],
+      fragranceStrengthComment:
+          stringField[StringValueField.fragranceStrengthComment],
+      fragranceExample: stringField[StringValueField.fragranceExample],
+      fragranceMainly: stringField[StringValueField.fragranceMainly],
+      fragranceComplexityComment:
+          stringField[StringValueField.fragranceComplexityComment],
+      tasteSoundness: stringField[StringValueField.tasteSoundness],
+      tasteAttackComment: stringField[StringValueField.tasteAttackComment],
+      tasteTexture: stringField[StringValueField.tasteTexture],
+      tasteExample: stringField[StringValueField.tasteExample],
+      tasteSweetnessComment:
+          stringField[StringValueField.tasteSweetnessComment],
+      afterFlavorStrengthComment:
+          stringField[StringValueField.afterFlavorStrengthComment],
+      afterFlavorExample: stringField[StringValueField.afterFlavorExample],
+      reverberationStrengthComment:
+          stringField[StringValueField.reverberationStrengthComment],
+      reverberationExample: stringField[StringValueField.reverberationExample],
+      tasteComplexityComment:
+          stringField[StringValueField.tasteComplexityComment],
+      individuality: stringField[StringValueField.individuality],
+      noticeComment: stringField[StringValueField.noticeComment],
+      flavorTypeComment: stringField[StringValueField.flavorTypeComment],
+      afterFlavorStrength: doubleField[DoubleValueField.afterFlavorStrength],
+      appearanceHue: doubleField[DoubleValueField.appearanceHue],
+      appearanceViscosity: doubleField[DoubleValueField.appearanceViscosity],
+      fragranceComplexity: doubleField[DoubleValueField.fragranceComplexity],
+      fragranceStrength: doubleField[DoubleValueField.fragranceStrength],
+      reverberationStrength:
+          doubleField[DoubleValueField.reverberationStrength],
+      tasteAttack: doubleField[DoubleValueField.tasteAttack],
+      tasteComplexity: doubleField[DoubleValueField.tasteComplexity],
+      tasteSweetness: doubleField[DoubleValueField.tasteSweetness]);
 
   e.Sake toSakeEntity() => e.Sake.create(
       sakeID: sake.id.value, breweryID: brewery.id.value, name: sake.name);

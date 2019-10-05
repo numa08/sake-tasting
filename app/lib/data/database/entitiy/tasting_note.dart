@@ -31,7 +31,16 @@ abstract class TastingNote extends Equatable {
           String individuality,
           String noticeComment,
           String flavorTypeComment,
-          int createdAtUTC}) =>
+          int createdAtUTC,
+          double afterFlavorStrength,
+          double appearanceHue,
+          double appearanceViscosity,
+          double fragranceComplexity,
+          double fragranceStrength,
+          double reverberationStrength,
+          double tasteAttack,
+          double tasteComplexity,
+          double tasteSweetness}) =>
       _SQLiteTastingNote(
           tastingNoteID,
           sakeID,
@@ -56,7 +65,16 @@ abstract class TastingNote extends Equatable {
           tasteComplexityComment,
           individuality,
           noticeComment,
-          flavorTypeComment);
+          flavorTypeComment,
+          afterFlavorStrength,
+          appearanceHue,
+          appearanceViscosity,
+          fragranceComplexity,
+          fragranceStrength,
+          reverberationStrength,
+          tasteAttack,
+          tasteComplexity,
+          tasteSweetness);
   String get tastingNoteID;
   String get sakeID;
   String get appearanceSoundness;
@@ -80,6 +98,15 @@ abstract class TastingNote extends Equatable {
   String get individuality;
   String get noticeComment;
   String get flavorTypeComment;
+  double get appearanceHue;
+  double get appearanceViscosity;
+  double get fragranceStrength;
+  double get fragranceComplexity;
+  double get tasteAttack;
+  double get tasteSweetness;
+  double get afterFlavorStrength;
+  double get reverberationStrength;
+  double get tasteComplexity;
   int get createdAtUTC;
   Map<String, dynamic> toJSON();
 }
@@ -110,7 +137,16 @@ class _SQLiteTastingNote extends TastingNote {
       this.tasteComplexityComment,
       this.individuality,
       this.noticeComment,
-      this.flavorTypeComment)
+      this.flavorTypeComment,
+      this.afterFlavorStrength,
+      this.appearanceHue,
+      this.appearanceViscosity,
+      this.fragranceComplexity,
+      this.fragranceStrength,
+      this.reverberationStrength,
+      this.tasteAttack,
+      this.tasteComplexity,
+      this.tasteSweetness)
       : super(<dynamic>[tastingNoteID, sakeID, createdAtUTC]);
   @override
   @JsonKey(name: 'id')
@@ -163,6 +199,24 @@ class _SQLiteTastingNote extends TastingNote {
   final String noticeComment;
   @override
   final String flavorTypeComment;
+  @override
+  final double afterFlavorStrength;
+  @override
+  final double appearanceHue;
+  @override
+  final double appearanceViscosity;
+  @override
+  final double fragranceComplexity;
+  @override
+  final double fragranceStrength;
+  @override
+  final double reverberationStrength;
+  @override
+  final double tasteAttack;
+  @override
+  final double tasteComplexity;
+  @override
+  final double tasteSweetness;
 
   @override
   Map<String, dynamic> toJSON() => _$_SQLiteTastingNoteToJson(this);

@@ -1,4 +1,5 @@
 import 'package:app/bloc/bloc.dart';
+import 'package:app/scene/edit_tasting_note/future_slider.dart';
 import 'package:app/scene/edit_tasting_note/future_text_field.dart';
 import 'package:app/services/edit_tasting_note_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,6 +78,16 @@ class _Body extends StatelessWidget {
                     return Text(
                       _descriptionFor(description),
                       style: Theme.of(context).textTheme.body1,
+                    );
+                  case SliderFormRow:
+                    final i = item as SliderFormRow;
+                    final field = i.field;
+                    return FutureSlider(
+                      value: bloc.editingTarget
+                          .map((t) => t.doubleField[field])
+                          .first,
+                      onChanged: (v) => bloc.onUpdateDoubleField
+                          .add(DoubleFieldValue(field, v)),
                     );
                   default:
                     return null;
@@ -161,7 +172,7 @@ String _formDescriptionFor(FormItem form) {
       return '日本酒の香りの用語集から選んだ具体的な要素が最も多かった枠のふさわしい形容詞例を参照し、'
           '香りの総合的な印象を、主体となる香りとして箇条書きで記す。';
     case FormItem.fragranceComplexity:
-      return '香りの要素が多いか、少ないかを判別する。多い場合は複雑、少ない場合はシンプルと表す。';
+      return '香りの要素が多いか少ないかを判別する。多い場合は複雑、少ない場合はシンプルと表す。';
     case FormItem.tasteSoundness:
       return '外観、香りに続いて味わいの健全度を確認する。';
     case FormItem.tasteAttack:

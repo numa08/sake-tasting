@@ -32,6 +32,15 @@ _SQLiteTastingNote _$_SQLiteTastingNoteFromJson(Map<String, dynamic> json) {
     json['individuality'] as String,
     json['notice_comment'] as String,
     json['flavor_type_comment'] as String,
+    (json['after_flavor_strength'] as num)?.toDouble(),
+    (json['appearance_hue'] as num)?.toDouble(),
+    (json['appearance_viscosity'] as num)?.toDouble(),
+    (json['fragrance_complexity'] as num)?.toDouble(),
+    (json['fragrance_strength'] as num)?.toDouble(),
+    (json['reverberation_strength'] as num)?.toDouble(),
+    (json['taste_attack'] as num)?.toDouble(),
+    (json['taste_complexity'] as num)?.toDouble(),
+    (json['taste_sweetness'] as num)?.toDouble(),
   );
 }
 
@@ -61,4 +70,13 @@ Map<String, dynamic> _$_SQLiteTastingNoteToJson(_SQLiteTastingNote instance) =>
       'individuality': instance.individuality,
       'notice_comment': instance.noticeComment,
       'flavor_type_comment': instance.flavorTypeComment,
+      'after_flavor_strength': instance.afterFlavorStrength,
+      'appearance_hue': instance.appearanceHue,
+      'appearance_viscosity': instance.appearanceViscosity,
+      'fragrance_complexity': instance.fragranceComplexity,
+      'fragrance_strength': instance.fragranceStrength,
+      'reverberation_strength': instance.reverberationStrength,
+      'taste_attack': instance.tasteAttack,
+      'taste_complexity': instance.tasteComplexity,
+      'taste_sweetness': instance.tasteSweetness,
     };

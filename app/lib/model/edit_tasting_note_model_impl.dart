@@ -109,6 +109,7 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
         sake: Sake(id: SakeID(value: _uuid.v4())),
         brewery: Brewery(id: BreweryID(value: _uuid.v4())),
         stringField: const {},
+        doubleField: const {},
         createdAt: DateTime.now()));
   }
 
@@ -125,6 +126,15 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
     final fields = Map.of(target.stringField);
     fields[field] = value;
     final newTarget = target.copyTo(stringField: fields);
+    _editingTargetSubject.add(newTarget);
+  }
+
+  @override
+  void setDoubleField(DoubleValueField field, double value) {
+    final target = _editingTargetSubject.value;
+    final fields = Map.of(target.doubleField);
+    fields[field] = value;
+    final newTarget = target.copyTo(doubleField: fields);
     _editingTargetSubject.add(newTarget);
   }
 }

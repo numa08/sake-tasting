@@ -12,6 +12,12 @@ class StringFieldValue {
   final String value;
 }
 
+class DoubleFieldValue {
+  DoubleFieldValue(this.field, this.value);
+  final DoubleValueField field;
+  final double value;
+}
+
 class EditTastingNoteBloc implements Bloc {
   EditTastingNoteBloc(this.editTastingNoteModel) {
     _subscriptions
@@ -24,8 +30,10 @@ class EditTastingNoteBloc implements Bloc {
         editTastingNoteModel.save();
       }))
       ..add(onAddImage.listen(editTastingNoteModel.addImage))
-      ..add(onUpdateStringField.listen(
-          (v) => editTastingNoteModel.setStringField(v.field, v.value)));
+      ..add(onUpdateStringField
+          .listen((v) => editTastingNoteModel.setStringField(v.field, v.value)))
+      ..add(onUpdateDoubleField.listen(
+          (v) => editTastingNoteModel.setDoubleField(v.field, v.value)));
   }
 
   final EditTastingNoteModel editTastingNoteModel;
@@ -55,9 +63,12 @@ class EditTastingNoteBloc implements Bloc {
         InputTextFormRow(
             StringValueField.appearanceSoundness, FormItem.appearanceSoundness),
         FormTitleAndDescriptionRow(FormItem.appearanceHue),
+        SliderFormRow(DoubleValueField.appearanceHue, FormItem.appearanceHue),
         InputTextFormRow(
             StringValueField.appearanceHueComment, FormItem.appearanceHue),
         FormTitleAndDescriptionRow(FormItem.appearanceViscosity),
+        SliderFormRow(
+            DoubleValueField.appearanceViscosity, FormItem.appearanceViscosity),
         InputTextFormRow(StringValueField.appearanceViscosityComment,
             FormItem.appearanceViscosity),
       ]);
@@ -68,6 +79,8 @@ class EditTastingNoteBloc implements Bloc {
         InputTextFormRow(
             StringValueField.fragranceSoundness, FormItem.fragranceSoundness),
         FormTitleAndDescriptionRow(FormItem.fragranceStrength),
+        SliderFormRow(
+            DoubleValueField.fragranceStrength, FormItem.fragranceStrength),
         InputTextFormRow(StringValueField.fragranceStrengthComment,
             FormItem.fragranceStrength),
         FormTitleAndDescriptionRow(FormItem.fragranceExample),
@@ -86,6 +99,7 @@ class EditTastingNoteBloc implements Bloc {
         InputTextFormRow(
             StringValueField.tasteSoundness, FormItem.tasteSoundness),
         FormTitleAndDescriptionRow(FormItem.tasteAttack),
+        SliderFormRow(DoubleValueField.tasteAttack, FormItem.tasteAttack),
         InputTextFormRow(
             StringValueField.tasteAttackComment, FormItem.tasteAttack),
         FormTitleAndDescriptionRow(FormItem.tasteTexture),
@@ -93,15 +107,20 @@ class EditTastingNoteBloc implements Bloc {
         FormTitleAndDescriptionRow(FormItem.tasteExample),
         InputTextFormRow(StringValueField.tasteExample, FormItem.tasteExample),
         FormTitleAndDescriptionRow(FormItem.tasteSweetness),
+        SliderFormRow(DoubleValueField.tasteSweetness, FormItem.tasteSweetness),
         InputTextFormRow(
             StringValueField.tasteSweetnessComment, FormItem.tasteSweetness),
         FormTitleAndDescriptionRow(FormItem.afterFlavorStrength),
+        SliderFormRow(
+            DoubleValueField.afterFlavorStrength, FormItem.afterFlavorStrength),
         InputTextFormRow(StringValueField.afterFlavorStrengthComment,
             FormItem.afterFlavorStrength),
         FormTitleAndDescriptionRow(FormItem.afterFlavorExample),
         InputTextFormRow(
             StringValueField.afterFlavorExample, FormItem.afterFlavorExample),
         FormTitleAndDescriptionRow(FormItem.reverberationStrength),
+        SliderFormRow(DoubleValueField.reverberationStrength,
+            FormItem.reverberationStrength),
         InputTextFormRow(StringValueField.reverberationStrengthComment,
             FormItem.reverberationStrength),
         FormTitleAndDescriptionRow(FormItem.reverberationExample),
@@ -133,6 +152,8 @@ class EditTastingNoteBloc implements Bloc {
   final PublishSubject<int> onTapImage = PublishSubject<int>();
   final PublishSubject<StringFieldValue> onUpdateStringField =
       PublishSubject<StringFieldValue>();
+  final PublishSubject<DoubleFieldValue> onUpdateDoubleField =
+      PublishSubject<DoubleFieldValue>();
 
   final _subscriptions = <StreamSubscription<dynamic>>[];
 
@@ -147,6 +168,7 @@ class EditTastingNoteBloc implements Bloc {
     await onDeleteImage.close();
     await onTapImage.close();
     await onUpdateStringField.close();
+    await onUpdateDoubleField.close();
   }
 }
 
@@ -164,6 +186,12 @@ abstract class ListRow {}
 class InputTextFormRow extends ListRow {
   InputTextFormRow(this.field, this.form);
   final StringValueField field;
+  final FormItem form;
+}
+
+class SliderFormRow extends ListRow {
+  SliderFormRow(this.field, this.form);
+  final DoubleValueField field;
   final FormItem form;
 }
 

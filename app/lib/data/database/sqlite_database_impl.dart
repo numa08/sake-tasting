@@ -62,32 +62,22 @@ class SQLiteDatabaseImpl implements TastingNoteDatabase {
   }
 
   @override
-  Future<void> saveTastingNote(TastingNote note) async {
-    final database = await _databaseManager.database;
-    await database.insert('tasting_note', note.toJSON());
-  }
-
-  @override
-  Future<void> saveBrewery(Brewery brewery) async {
-    final database = await _databaseManager.database;
-    await database.insert('brewery', brewery.toJSON());
-  }
-
-  @override
-  Future<void> saveSake(Sake sake) async {
-    final database = await _databaseManager.database;
-    await database.insert('sake', sake.toJSON());
-  }
-
-  @override
-  Future<void> saveImage(TastingNoteImage image) async {
-    final database = await _databaseManager.database;
-    await database.insert('tasting_note_image', image.toJSON());
-  }
-
-  @override
   Future<void> close() async {
     await (await _databaseManager.database).close();
+  }
+
+  @override
+  Future<void> save(Sake sake, Brewery brewery, List<TastingNoteImage> images,
+      TastingNote tastingNote) async {
+    final database = await _databaseManager.database;
+    await database.transaction((transaction) async {
+      await transaction.insert('brewery', brewery.toJSON());
+      await transaction.insert('sake', sake.toJSON());
+      for (final image in images) {
+        await transaction.insert('tasting_note_image', image.toJSON());
+      }
+      await transaction.insert('tasting_note', tastingNote.toJSON());
+    });
   }
 }
 
@@ -113,7 +103,7 @@ class _DatabaseManager {
 	"fragrance_mainly"	TEXT,
 	"fragrance_complexity_comment"	TEXT,
 	"taste_soundness"	TEXT,
-	"taste_atack_comment"	TEXT,
+	"taste_attack_comment"	TEXT,
 	"taste_texture"	TEXT,
 	"taste_example"	TEXT,
 	"taste_sweetness_comment"	TEXT,
@@ -122,7 +112,7 @@ class _DatabaseManager {
 	"reverberation_strength_comment"	TEXT,
 	"reverberation_example"	TEXT,
 	"taste_complexity_comment"	TEXT,
-	"indivisuality"	TEXT,
+	"individuality"	TEXT,
 	"notice_comment"	TEXT,
 	"flavor_type_comment"	TEXT,
 	"appearance_hue"	INTEGER DEFAULT 0.5 CHECK(appearance_hue>=0 AND appearance_hue<=1.0),

@@ -55,12 +55,8 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
         return TastingNoteImage(id: i.id, image: newFile);
       }).toList();
       final value = _editingTargetSubject.value.copyTo(images: newImages);
-
-      await _database.saveBrewery(value.toBreweryEntity());
-      await _database.saveSake(value.toSakeEntity());
-      await _database.saveTastingNote(value.toTastingNoteEntity());
-      await Future.wait(
-          value.toTastingNoteImageEntities().map(_database.saveImage));
+      await _database.save(value.toSakeEntity(), value.toBreweryEntity(),
+          value.toTastingNoteImageEntities(), value.toTastingNoteEntity());
       _saveResultSubject.add(Result.value(value));
     } on Exception catch (e) {
       _saveResultSubject.add(Result.error(e));

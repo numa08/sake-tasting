@@ -10,9 +10,7 @@ abstract class TastingNoteDatabase {
   Future<Sake> findSakeByID(String id);
   Future<Brewery> findBreweryByID(String id);
   Future<List<TastingNoteImage>> findImage(String tastingNoteID);
-  Future<void> saveTastingNote(TastingNote note);
-  Future<void> saveSake(Sake sake);
-  Future<void> saveBrewery(Brewery brewery);
-  Future<void> saveImage(TastingNoteImage image);
+  Future<void> save(Sake sake, Brewery brewery, List<TastingNoteImage> image,
+      TastingNote tastingNote);
   Future<void> close();
 }

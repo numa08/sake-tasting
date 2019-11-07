@@ -90,7 +90,46 @@ class TastingNote extends Equatable {
         sake: sake,
         brewery: brewery,
         images: images,
-        createdAt: createdAt);
+        createdAt: createdAt,
+        stringField: <StringValueField, String>{
+          StringValueField.appearanceSoundness: ne.appearanceSoundness,
+          StringValueField.appearanceHueComment: ne.appearanceHueComment,
+          StringValueField.appearanceViscosityComment:
+              ne.appearanceViscosityComment,
+          StringValueField.fragranceSoundness: ne.fragranceSoundness,
+          StringValueField.fragranceStrengthComment:
+              ne.fragranceStrengthComment,
+          StringValueField.fragranceExample: ne.fragranceExample,
+          StringValueField.fragranceMainly: ne.fragranceMainly,
+          StringValueField.fragranceComplexityComment:
+              ne.fragranceComplexityComment,
+          StringValueField.tasteSoundness: ne.tasteSoundness,
+          StringValueField.tasteAttackComment: ne.tasteAttackComment,
+          StringValueField.tasteTexture: ne.tasteTexture,
+          StringValueField.tasteExample: ne.tasteExample,
+          StringValueField.tasteSweetnessComment: ne.tasteSweetnessComment,
+          StringValueField.afterFlavorStrengthComment:
+              ne.afterFlavorStrengthComment,
+          StringValueField.afterFlavorExample: ne.afterFlavorExample,
+          StringValueField.reverberationStrengthComment:
+              ne.reverberationStrengthComment,
+          StringValueField.reverberationExample: ne.reverberationExample,
+          StringValueField.tasteComplexityComment: ne.tasteComplexityComment,
+          StringValueField.individuality: ne.individuality,
+          StringValueField.noticeComment: ne.noticeComment,
+          StringValueField.flavorTypeComment: ne.flavorTypeComment,
+        },
+        doubleField: {
+          DoubleValueField.afterFlavorStrength: ne.afterFlavorStrength,
+          DoubleValueField.appearanceHue: ne.appearanceHue,
+          DoubleValueField.appearanceViscosity: ne.appearanceViscosity,
+          DoubleValueField.fragranceComplexity: ne.fragranceComplexity,
+          DoubleValueField.fragranceStrength: ne.fragranceStrength,
+          DoubleValueField.reverberationStrength: ne.reverberationStrength,
+          DoubleValueField.tasteAttack: ne.tasteAttack,
+          DoubleValueField.tasteComplexity: ne.tasteComplexity,
+          DoubleValueField.tasteSweetness: ne.tasteSweetness,
+        });
     return tastingNote;
   }
   final TastingNoteID id;
@@ -109,14 +148,13 @@ class TastingNote extends Equatable {
     Map<DoubleValueField, double> doubleField,
   }) =>
       TastingNote(
-        id: id,
-        sake: sake ?? this.sake,
-        brewery: brewery ?? this.brewery,
-        images: images ?? this.images,
-        createdAt: createdAt,
-        stringField: stringField ?? this.stringField,
-        doubleField: doubleField ?? this.doubleField
-      );
+          id: id,
+          sake: sake ?? this.sake,
+          brewery: brewery ?? this.brewery,
+          images: images ?? this.images,
+          createdAt: createdAt,
+          stringField: stringField ?? this.stringField,
+          doubleField: doubleField ?? this.doubleField);
 
   e.TastingNote toTastingNoteEntity() => e.TastingNote.crate(
       tastingNoteID: id.value,

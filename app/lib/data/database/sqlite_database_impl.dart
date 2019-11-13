@@ -94,7 +94,7 @@ class _DatabaseManager {
 	"id"	TEXT NOT NULL,
 	"sake_id"	TEXT NOT NULL,
 	"created_at_utc"	INTEGER NOT NULL,
-	"appearance_soundness"	TEXT NOT NULL,
+	"appearance_soundness"	TEXT,
 	"appearance_hue_comment"	TEXT,
 	"appearance_viscosity_comment"	TEXT,
 	"fragrance_soundness"	TEXT,

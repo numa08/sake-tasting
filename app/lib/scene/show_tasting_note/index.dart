@@ -50,10 +50,200 @@ class _Body extends StatelessWidget {
                     children: <Widget>[
                       ListTile(
                         title: Text(tastingNote.sake.name),
+                        subtitle: Text(tastingNote.brewery.name),
                       ),
                       ListTile(
-                        title: Text(tastingNote.brewery.name),
+                        title: const Text('外観'),
                       ),
+                      ListTile(
+                        leading: const Text('健全度'),
+                        trailing: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.appearanceSoundness],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('色合い'),
+                        trailing: _NullableText(
+                            text: tastingNote
+                                .doubleField[DoubleValueField.appearanceHue]
+                                ?.toString()),
+                        subtitle: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.appearanceHueComment],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('粘性'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .doubleField[DoubleValueField.appearanceViscosity]
+                              ?.toString(),
+                        ),
+                        subtitle: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.appearanceViscosityComment],
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('香り'),
+                      ),
+                      ListTile(
+                        leading: const Text('健全度'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.fragranceSoundness],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('強さ'),
+                        subtitle: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.fragranceStrengthComment],
+                        ),
+                        trailing: _NullableText(
+                            text: tastingNote
+                                .doubleField[DoubleValueField.fragranceStrength]
+                                ?.toString()),
+                      ),
+                      ListTile(
+                        leading: const Text('具体例'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.fragranceExample],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('主体となる香り'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.fragranceMainly],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('複雑性'),
+                        trailing: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.fragranceComplexityComment],
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('味わい'),
+                      ),
+                      ListTile(
+                        leading: const Text('健全度'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.tasteSoundness],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('アタック'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .doubleField[DoubleValueField.tasteAttack]
+                              ?.toString(),
+                        ),
+                        subtitle: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.tasteAttackComment],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('テクスチャー'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.tasteTexture],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('具体的な味わい'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.tasteExample],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('甘辛度'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .doubleField[DoubleValueField.tasteSweetness]
+                              ?.toString(),
+                        ),
+                        subtitle: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.tasteSweetnessComment],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('含み香の発現性'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .doubleField[DoubleValueField.afterFlavorStrength]
+                              ?.toString(),
+                        ),
+                        subtitle: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.afterFlavorStrengthComment],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('含み香の内容'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.afterFlavorExample],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('余韻'),
+                        trailing: _NullableText(
+                          text: tastingNote.doubleField[
+                                  DoubleValueField.reverberationStrength]
+                              ?.toString(),
+                        ),
+                        subtitle: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.reverberationStrengthComment],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('余韻の内容'),
+                        trailing: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.reverberationExample],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('複雑性'),
+                        trailing: _NullableText(
+                          text: tastingNote.stringField[
+                              StringValueField.tasteComplexityComment],
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('個性の抽出'),
+                      ),
+                      ListTile(
+                        leading: const Text('個性抽出'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.individuality],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('留意点の抽出'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.noticeComment],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text('香味特性分類の留意点'),
+                        trailing: _NullableText(
+                          text: tastingNote
+                              .stringField[StringValueField.flavorTypeComment],
+                        ),
+                      )
                     ],
                   );
                 })),
@@ -90,4 +280,13 @@ class _ShowTastingNoteSubscriptionState
 
   @override
   Widget build(BuildContext context) => Container();
+}
+
+class _NullableText extends StatelessWidget {
+  const _NullableText({Key key, this.text}) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Text(text ?? '');
 }

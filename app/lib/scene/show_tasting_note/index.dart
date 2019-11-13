@@ -238,6 +238,14 @@ class _Body extends StatelessWidget {
                         ),
                       ),
                       ListTile(
+                        leading: const Text('香味特性'),
+                        trailing: _NullableText(
+                          text: tastingNote.flavorTypes
+                              .map(_flavorTypeToName)
+                              .join(','),
+                        ),
+                      ),
+                      ListTile(
                         leading: const Text('香味特性分類の留意点'),
                         trailing: _NullableText(
                           text: tastingNote
@@ -289,4 +297,23 @@ class _NullableText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(text ?? '');
+}
+
+String _flavorTypeToName(FlavorType type) {
+  if (type == FlavorType.aromatic()) {
+    return '薫酒';
+  }
+  if (type == FlavorType.refreshing()) {
+    return '爽酒';
+  }
+  if (type == FlavorType.rich()) {
+    return '醇酒';
+  }
+  if (type == FlavorType.aged()) {
+    return '熟酒';
+  }
+  if (type == FlavorType.sparkling()) {
+    return 'スパークリング';
+  }
+  throw ArgumentError('未定義のtypeです $type');
 }

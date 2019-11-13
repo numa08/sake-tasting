@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "tasting_note" (
 	"fragrance_mainly"	TEXT,
 	"fragrance_complexity_comment"	TEXT,
 	"taste_soundness"	TEXT,
-	"taste_atack_comment"	TEXT,
+	"taste_attack_comment"	TEXT,
 	"taste_texture"	TEXT,
 	"taste_example"	TEXT,
 	"taste_sweetness_comment"	TEXT,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "tasting_note" (
 	"reverberation_strength_comment"	TEXT,
 	"reverberation_example"	TEXT,
 	"taste_complexity_comment"	TEXT,
-	"indivisuality"	TEXT,
+	"individuality"	TEXT,
 	"notice_comment"	TEXT,
 	"flavor_type_comment"	TEXT,
 	"appearance_hue"	INTEGER DEFAULT 0.5 CHECK(appearance_hue>=0 AND appearance_hue<=1.0),
@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS "tasting_note" (
 	"after_flavor_strength"	INTEGER DEFAULT 0.5 CHECK(after_flavor_strength>=0 AND after_flavor_strength<=1.0),
 	"reverberation_strength"	INTEGER DEFAULT 0.5 CHECK(reverberation_strength>=0 AND reverberation_strength<=1.0),
 	"taste_complexity"	INTEGER DEFAULT 0.5 CHECK(taste_complexity>=0 AND taste_complexity<=1.0),
+	"flavor_type"	TEXT,
 	PRIMARY KEY("id"),
 	FOREIGN KEY("sake_id") REFERENCES "sake"("id")
 );

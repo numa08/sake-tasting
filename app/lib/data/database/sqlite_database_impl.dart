@@ -124,6 +124,7 @@ class _DatabaseManager {
 	"after_flavor_strength"	INTEGER DEFAULT 0.5 CHECK(after_flavor_strength>=0 AND after_flavor_strength<=1.0),
 	"reverberation_strength"	INTEGER DEFAULT 0.5 CHECK(reverberation_strength>=0 AND reverberation_strength<=1.0),
 	"taste_complexity"	INTEGER DEFAULT 0.5 CHECK(taste_complexity>=0 AND taste_complexity<=1.0),
+	"flavor_type"	TEXT,
 	PRIMARY KEY("id"),
 	FOREIGN KEY("sake_id") REFERENCES "sake"("id")
 );

@@ -31,6 +31,7 @@ abstract class TastingNote extends Equatable {
           String individuality,
           String noticeComment,
           String flavorTypeComment,
+          String flavorType,
           int createdAtUTC,
           double afterFlavorStrength,
           double appearanceHue,
@@ -66,6 +67,7 @@ abstract class TastingNote extends Equatable {
           individuality,
           noticeComment,
           flavorTypeComment,
+          flavorType,
           afterFlavorStrength,
           appearanceHue,
           appearanceViscosity,
@@ -98,6 +100,7 @@ abstract class TastingNote extends Equatable {
   String get individuality;
   String get noticeComment;
   String get flavorTypeComment;
+  String get flavorType;
   double get appearanceHue;
   double get appearanceViscosity;
   double get fragranceStrength;
@@ -138,6 +141,7 @@ class _SQLiteTastingNote extends TastingNote {
       this.individuality,
       this.noticeComment,
       this.flavorTypeComment,
+      this.flavorType,
       this.afterFlavorStrength,
       this.appearanceHue,
       this.appearanceViscosity,
@@ -199,6 +203,8 @@ class _SQLiteTastingNote extends TastingNote {
   final String noticeComment;
   @override
   final String flavorTypeComment;
+  @override
+  final String flavorType;
   @override
   final double afterFlavorStrength;
   @override

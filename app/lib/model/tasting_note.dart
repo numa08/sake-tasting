@@ -71,6 +71,7 @@ class TastingNote extends Equatable {
       this.sake,
       this.brewery,
       this.images,
+      this.flavorTypes,
       this.createdAt,
       this.stringField,
       this.doubleField})
@@ -84,12 +85,15 @@ class TastingNote extends Equatable {
             id: TastingNoteImageID(value: ie.imageID),
             image: File(join(dataDirectoryPath, ie.name))))
         .toList();
+    final flavorTypes =
+        ne.flavorType.split(',').map((s) => FlavorType.fromName(s)).toList();
     final createdAt = DateTime.fromMillisecondsSinceEpoch(ne.createdAtUTC);
     final tastingNote = TastingNote(
         id: TastingNoteID(value: ne.tastingNoteID),
         sake: sake,
         brewery: brewery,
         images: images,
+        flavorTypes: flavorTypes,
         createdAt: createdAt,
         stringField: <StringValueField, String>{
           StringValueField.appearanceSoundness: ne.appearanceSoundness,
@@ -136,6 +140,7 @@ class TastingNote extends Equatable {
   final Sake sake;
   final Brewery brewery;
   final List<TastingNoteImage> images;
+  final List<FlavorType> flavorTypes;
   final DateTime createdAt;
   final Map<StringValueField, String> stringField;
   final Map<DoubleValueField, double> doubleField;
@@ -188,6 +193,7 @@ class TastingNote extends Equatable {
       individuality: stringField[StringValueField.individuality],
       noticeComment: stringField[StringValueField.noticeComment],
       flavorTypeComment: stringField[StringValueField.flavorTypeComment],
+      flavorType: flavorTypes.map((t) => t.name).join(','),
       afterFlavorStrength: doubleField[DoubleValueField.afterFlavorStrength],
       appearanceHue: doubleField[DoubleValueField.appearanceHue],
       appearanceViscosity: doubleField[DoubleValueField.appearanceViscosity],

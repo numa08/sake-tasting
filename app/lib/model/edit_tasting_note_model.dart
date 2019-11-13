@@ -24,4 +24,5 @@ abstract class EditTastingNoteModel {
   Future<File> deleteImage(int index);
   void setStringField(StringValueField field, String value);
   void setDoubleField(DoubleValueField field, double value);
+  void setFlavorType(List<FlavorType> flavorTypes);
 }

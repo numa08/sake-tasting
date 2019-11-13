@@ -104,6 +104,7 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
         id: TastingNoteID(value: _uuid.v4()),
         sake: Sake(id: SakeID(value: _uuid.v4())),
         brewery: Brewery(id: BreweryID(value: _uuid.v4())),
+        flavorTypes: const <FlavorType>[],
         stringField: const {},
         doubleField: const {},
         createdAt: DateTime.now()));
@@ -132,6 +133,13 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
     final fields = Map.of(target.doubleField);
     fields[field] = value;
     final newTarget = target.copyTo(doubleField: fields);
+    _editingTargetSubject.add(newTarget);
+  }
+
+  @override
+  void setFlavorType(List<FlavorType> flavorTypes) {
+    final target = _editingTargetSubject.value;
+    final newTarget = target.copyTo(flavorTypes: flavorTypes);
     _editingTargetSubject.add(newTarget);
   }
 }

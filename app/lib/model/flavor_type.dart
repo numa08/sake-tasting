@@ -1,4 +1,8 @@
-abstract class FlavorType {
+import 'package:equatable/equatable.dart';
+
+abstract class FlavorType extends Equatable {
+    const FlavorType([List props = const <dynamic>[]]) : super(props);
+
   factory FlavorType.fromName(String name) {
     switch (name) {
       case 'aromatic':
@@ -21,30 +25,37 @@ abstract class FlavorType {
         break;
     }
   }
+
+  factory FlavorType.aromatic() => _Aromatic();
+  factory FlavorType.refreshing() => _Refreshing();
+  factory FlavorType.aged() => _Aged();
+  factory FlavorType.rich() => _Rich();
+  factory FlavorType.sparkling() => _Sparkling();
+
   String get name;
 }
 
-class _Aromatic implements FlavorType {
+class _Aromatic extends FlavorType {
   @override
   String get name => 'aromatic';
 }
 
-class _Refreshing implements FlavorType {
+class _Refreshing extends FlavorType {
   @override
   String get name => 'refreshing';
 }
 
-class _Aged implements FlavorType {
+class _Aged extends FlavorType {
   @override
   String get name => 'aged';
 }
 
-class _Rich implements FlavorType {
+class _Rich extends FlavorType {
   @override
   String get name => 'rich';
 }
 
-class _Sparkling implements FlavorType {
+class _Sparkling extends FlavorType {
   @override
   String get name => 'sparkling';
 }

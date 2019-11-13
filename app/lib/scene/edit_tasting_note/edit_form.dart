@@ -1,4 +1,5 @@
 import 'package:app/bloc/bloc.dart';
+import 'package:app/model/model.dart';
 import 'package:app/scene/edit_tasting_note/future_slider.dart';
 import 'package:app/scene/edit_tasting_note/future_text_field.dart';
 import 'package:app/services/edit_tasting_note_provider.dart';
@@ -89,6 +90,12 @@ class _Body extends StatelessWidget {
                       onChanged: (v) => bloc.onUpdateDoubleField
                           .add(DoubleFieldValue(field, v)),
                     );
+                  case FlavorTypeForm:
+                    return _FlavorTypeCheckBoxList(
+                      checkedValues:
+                          bloc.editingTarget.map((t) => t.flavorTypes).first,
+                      onChanged: bloc.onUpdateFlavorTypes.add,
+                    );
                   default:
                     return null;
                 }
@@ -142,6 +149,8 @@ String _formTitleFor(FormItem form) {
       return '個性抽出';
     case FormItem.noticeComment:
       return '留意点の抽出';
+    case FormItem.flavorType:
+      return '香味特性分類';
     case FormItem.flavorTypeComment:
       return '香味特性分類の留意点';
   }
@@ -172,11 +181,11 @@ String _formDescriptionFor(FormItem form) {
       return '日本酒の香りの用語集から選んだ具体的な要素が最も多かった枠のふさわしい形容詞例を参照し、'
           '香りの総合的な印象を、主体となる香りとして箇条書きで記す。';
     case FormItem.fragranceComplexity:
-      return '香りの要素が多いか少ないかを判別する。多い場合は複雑、少ない場合はシンプルと表す。';
+      return '香りの要素が多いか少ないかを判別する。��い場合は複雑、少ない場合はシンプルと表す。';
     case FormItem.tasteSoundness:
       return '外観、香りに続いて味わいの健全度を確認する。';
     case FormItem.tasteAttack:
-      return '口に含んだ際の印象や感覚をアタックと呼び、「強い」か「弱い」で表す。';
+      return '口に含んだ際の印象や感覚をアタックと呼び、「�������い」か「弱い」で表す。';
     case FormItem.tasteTexture:
       return '食品分野では「口当たり」「歯ごたえ」「舌触り」、飲料分野では「飲み口」などと呼ばれる。'
           '「柔らかい」「硬い」「キメが粗い」「キメが細かい」など、物理的な感覚を表す。';
@@ -206,6 +215,8 @@ String _formDescriptionFor(FormItem form) {
     case FormItem.noticeComment:
       return '個性の中で、サービス時、セールス時に留意すべきと思われる要素があれば記入しておく。'
           '（留意点がない場合は無理に抽出する必要はない）';
+    case FormItem.flavorType:
+      return '個性抽出後、香味特性別分類のいずれに該当するかを判定する。';
     case FormItem.flavorTypeComment:
       return '個性抽出後、香味特性別分類のいずれに該当するかを判定する。';
   }
@@ -228,4 +239,85 @@ String _descriptionFor(DescriptionItem description) {
     case DescriptionItem.individuality:
       return '日本酒の提供時に役立つ「個性抽出の重要性と手法」「留意点の抽出」「香味特性分類の判定」を行う。';
   }
+}
+
+class _FlavorTypeCheckBoxList extends StatefulWidget {
+  const _FlavorTypeCheckBoxList({Key key, this.checkedValues, this.onChanged})
+      : super(key: key);
+  final Future<List<FlavorType>> checkedValues;
+  final ValueChanged<List<FlavorType>> onChanged;
+
+  @override
+  State<StatefulWidget> createState() => _FlavorTypeChackBoxListState();
+}
+
+class _FlavorTypeChackBoxListState extends State<_FlavorTypeCheckBoxList> {
+  List<FlavorType> _values;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _values = <FlavorType>[];
+    });
+    widget.checkedValues.then((v) {
+      setState(() {
+        if (v == null) {
+          return;
+        }
+        _values = v;
+      });
+    });
+  }
+
+  void _changeCheckState(FlavorType type, bool checked) {
+    final newValues = <FlavorType>[]..addAll(_values);
+    if (checked && !_values.contains(type)) {
+      newValues.add(type);
+    }
+    if (!checked && _values.contains(type)) {
+      newValues.remove(type);
+    }
+
+    setState(() {
+      _values = newValues;
+      widget.onChanged(_values);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          CheckboxListTile(
+            title: const Text('薫酒 香りの高いタイプ'),
+            onChanged: (check) =>
+                _changeCheckState(FlavorType.aromatic(), check),
+            value: _values.contains(FlavorType.aromatic()),
+          ),
+          CheckboxListTile(
+            title: const Text('爽酒 軽快でなめらかなタイプ'),
+            onChanged: (check) =>
+                _changeCheckState(FlavorType.refreshing(), check),
+            value: _values.contains(FlavorType.refreshing()),
+          ),
+          CheckboxListTile(
+            title: const Text('醇酒 コクのあるタイプ'),
+            onChanged: (check) => _changeCheckState(FlavorType.rich(), check),
+            value: _values.contains(FlavorType.rich()),
+          ),
+          CheckboxListTile(
+            title: const Text('熟酒 熟成タイプ'),
+            onChanged: (check) => _changeCheckState(FlavorType.aged(), check),
+            value: _values.contains(FlavorType.aged()),
+          ),
+          CheckboxListTile(
+            title: const Text('スパークリング'),
+            onChanged: (check) =>
+                _changeCheckState(FlavorType.sparkling(), check),
+            value: _values.contains(FlavorType.sparkling()),
+          ),
+        ],
+      );
 }

@@ -149,6 +149,7 @@ class TastingNote extends Equatable {
     Sake sake,
     Brewery brewery,
     List<TastingNoteImage> images,
+    List<FlavorType> flavorTypes,
     Map<StringValueField, String> stringField,
     Map<DoubleValueField, double> doubleField,
   }) =>
@@ -157,6 +158,7 @@ class TastingNote extends Equatable {
           sake: sake ?? this.sake,
           brewery: brewery ?? this.brewery,
           images: images ?? this.images,
+          flavorTypes: flavorTypes ?? this.flavorTypes,
           createdAt: createdAt,
           stringField: stringField ?? this.stringField,
           doubleField: doubleField ?? this.doubleField);

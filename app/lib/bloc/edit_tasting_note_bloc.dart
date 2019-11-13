@@ -32,8 +32,9 @@ class EditTastingNoteBloc implements Bloc {
       ..add(onAddImage.listen(editTastingNoteModel.addImage))
       ..add(onUpdateStringField
           .listen((v) => editTastingNoteModel.setStringField(v.field, v.value)))
-      ..add(onUpdateDoubleField.listen(
-          (v) => editTastingNoteModel.setDoubleField(v.field, v.value)));
+      ..add(onUpdateDoubleField
+          .listen((v) => editTastingNoteModel.setDoubleField(v.field, v.value)))
+      ..add(onUpdateFlavorTypes.listen(editTastingNoteModel.setFlavorType));
   }
 
   final EditTastingNoteModel editTastingNoteModel;
@@ -138,6 +139,8 @@ class EditTastingNoteBloc implements Bloc {
             StringValueField.individuality, FormItem.individuality),
         FormTitleAndDescriptionRow(FormItem.noticeComment),
         InputTextFormRow(StringValueField.noticeComment, FormItem.tasteExample),
+        FormTitleAndDescriptionRow(FormItem.flavorType),
+        FlavorTypeForm(),
         FormTitleAndDescriptionRow(FormItem.flavorTypeComment),
         InputTextFormRow(
             StringValueField.flavorTypeComment, FormItem.flavorTypeComment),
@@ -154,6 +157,8 @@ class EditTastingNoteBloc implements Bloc {
       PublishSubject<StringFieldValue>();
   final PublishSubject<DoubleFieldValue> onUpdateDoubleField =
       PublishSubject<DoubleFieldValue>();
+  final PublishSubject<List<FlavorType>> onUpdateFlavorTypes =
+      PublishSubject<List<FlavorType>>();
 
   final _subscriptions = <StreamSubscription<dynamic>>[];
 
@@ -195,6 +200,8 @@ class SliderFormRow extends ListRow {
   final FormItem form;
 }
 
+class FlavorTypeForm extends ListRow {}
+
 enum DescriptionItem { appearance, fragrance, taste, individuality }
 
 class DescriptionItemRow extends ListRow {
@@ -223,6 +230,7 @@ enum FormItem {
   tasteComplexity,
   individuality,
   noticeComment,
+  flavorType,
   flavorTypeComment
 }
 

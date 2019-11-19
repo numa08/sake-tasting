@@ -1,4 +1,5 @@
 import 'package:app2/data/database/database.dart';
+import 'package:app2/scenes/edit_tasting_note/index.dart';
 import 'package:app2/scenes/top/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_driver/driver_extension.dart';
@@ -12,7 +13,7 @@ void main() async {
 
   // Enable integration testing with the Flutter Driver extension.
   // See https://flutter.dev/testing/ for more info.
-  enableFlutterDriverExtension();
+  // enableFlutterDriverExtension();
   runApp(MyApp(
     database: database,
   ));
@@ -40,9 +41,14 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Top(
+      home: TopScene(
         database: database,
       ),
+      routes: {
+        EditTastingNoteScene.name: (context) => EditTastingNoteScene(
+              database: database,
+            )
+      },
     );
   }
 }

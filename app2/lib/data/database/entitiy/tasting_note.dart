@@ -7,7 +7,7 @@ abstract class TastingNote extends Equatable {
   const TastingNote([List props = const <dynamic>[]]) : super(props);
   factory TastingNote.fromJSON(Map<String, dynamic> json) =>
       _$_SQLiteTastingNoteFromJson(json);
-  factory TastingNote.crate(
+  factory TastingNote.create(
           {String tastingNoteID,
           String sakeID,
           String appearanceSoundness,

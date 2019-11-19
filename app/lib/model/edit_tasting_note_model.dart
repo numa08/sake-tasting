@@ -25,4 +25,8 @@ abstract class EditTastingNoteModel {
   void setStringField(StringValueField field, String value);
   void setDoubleField(DoubleValueField field, double value);
   void setFlavorType(List<FlavorType> flavorTypes);
+
+  TastingNote createTastingNote();
+  bool canSaveTastingNote(TastingNote note, List<TastingNoteImage> images);
+  Future<void> saveTastingNote(TastingNote note, List<TastingNoteImage> images);
 }

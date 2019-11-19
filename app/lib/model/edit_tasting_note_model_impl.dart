@@ -44,6 +44,19 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
       });
 
   @override
+  bool canSaveTastingNote(TastingNote note, List<TastingNoteImage> images) =>
+      note != null &&
+      note.id != null &&
+      note.sake != null &&
+      note.sake.name != null &&
+      note.sake.name.isNotEmpty &&
+      note.brewery != null &&
+      note.brewery.name != null &&
+      note.brewery.name.isNotEmpty &&
+      note.createdAt != null &&
+      images.isNotEmpty;
+
+  @override
   Future<void> save() async {
     final dataPath = await getApplicationDocumentsDirectory();
     final images = _tastingNoteImagesSubject.value;
@@ -55,6 +68,26 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
         return TastingNoteImage(id: i.id, image: newFile);
       }).toList();
       final value = _editingTargetSubject.value.copyTo(images: newImages);
+      await _database.save(value.toSakeEntity(), value.toBreweryEntity(),
+          value.toTastingNoteImageEntities(), value.toTastingNoteEntity());
+      _saveResultSubject.add(Result.value(value));
+    } on Exception catch (e) {
+      _saveResultSubject.add(Result.error(e));
+    }
+  }
+
+  @override
+  Future<void> saveTastingNote(
+      TastingNote note, List<TastingNoteImage> images) async {
+    final dataPath = await getApplicationDocumentsDirectory();
+
+    try {
+      final newImages = images.map((i) {
+        final newPath = join(dataPath.path, basename(i.image.path));
+        final newFile = i.image.copySync(newPath);
+        return TastingNoteImage(id: i.id, image: newFile);
+      }).toList();
+      final value = note.copyTo(images: newImages);
       await _database.save(value.toSakeEntity(), value.toBreweryEntity(),
           value.toTastingNoteImageEntities(), value.toTastingNoteEntity());
       _saveResultSubject.add(Result.value(value));
@@ -100,16 +133,19 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
 
   @override
   Future<void> startEditing() async {
-    _editingTargetSubject.add(TastingNote(
-        id: TastingNoteID(value: _uuid.v4()),
-        sake: Sake(id: SakeID(value: _uuid.v4())),
-        brewery: Brewery(id: BreweryID(value: _uuid.v4())),
-        flavorTypes: const <FlavorType>[],
-        stringField: const {},
-        doubleField: const {},
-        createdAt: DateTime.now()));
-    _tastingNoteImagesSubject.add([]);
   }
+
+  @override
+  TastingNote createTastingNote() => TastingNote(
+      id: TastingNoteID(value: _uuid.v4()),
+      sake: Sake(id: SakeID(value: _uuid.v4())),
+      brewery: Brewery(id: BreweryID(value: _uuid.v4())),
+      images: const [],
+      appearance: Appearance(),
+      fragrance: Fragrance(),
+      taste: Taste(),
+      individuality: Individuality(),
+      createdAt: DateTime.now());
 
   @override
   Future<void> close() async {
@@ -120,26 +156,14 @@ class EditTastingNoteModelImpl implements EditTastingNoteModel {
 
   @override
   void setStringField(StringValueField field, String value) {
-    final target = _editingTargetSubject.value;
-    final fields = Map.of(target.stringField);
-    fields[field] = value;
-    final newTarget = target.copyTo(stringField: fields);
-    _editingTargetSubject.add(newTarget);
   }
 
   @override
   void setDoubleField(DoubleValueField field, double value) {
-    final target = _editingTargetSubject.value;
-    final fields = Map.of(target.doubleField);
-    fields[field] = value;
-    final newTarget = target.copyTo(doubleField: fields);
-    _editingTargetSubject.add(newTarget);
+
   }
 
   @override
   void setFlavorType(List<FlavorType> flavorTypes) {
-    final target = _editingTargetSubject.value;
-    final newTarget = target.copyTo(flavorTypes: flavorTypes);
-    _editingTargetSubject.add(newTarget);
   }
 }

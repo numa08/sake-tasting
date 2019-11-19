@@ -74,17 +74,25 @@ class _Body extends StatelessWidget {
     );
   }
 
-  Widget _buildlabel(TastingNote note) => FutureBuilder<ListTile>(
+  Widget _buildlabel(TastingNote note) => FutureBuilder<Widget>(
       future: _listTile(note),
       builder: (context, snapshot) =>
           snapshot.hasData ? snapshot.data : Container());
 
-  Future<ListTile> _listTile(TastingNote note) async {
+  Future<Widget> _listTile(TastingNote note) async {
     final sake = await database.findSakeByID(note.sakeID);
     final brewery = await database.findBreweryByID(sake.breweryID);
-    return ListTile(
-      title: Text(sake.name),
-      subtitle: Text(brewery.name),
+    return Builder(
+      builder: (context) => InkWell(
+        child: ListTile(
+          title: Text(sake.name),
+          subtitle: Text(brewery.name),
+        ),
+        onTap: () {
+          Navigator.of(context).pushNamed(EditTastingNoteScene.name,
+              arguments: note.tastingNoteID);
+        },
+      ),
     );
   }
 }

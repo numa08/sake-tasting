@@ -44,10 +44,16 @@ class MyApp extends StatelessWidget {
       home: TopScene(
         database: database,
       ),
-      routes: {
-        EditTastingNoteScene.name: (context) => EditTastingNoteScene(
-              database: database,
-            )
+      onGenerateRoute: (settings) {
+        if (settings.name == EditTastingNoteScene.name) {
+          final tastingNoteID = settings.arguments as String;
+          return MaterialPageRoute<dynamic>(
+              builder: (context) => EditTastingNoteScene(
+                    database: database,
+                    tastingNoteID: tastingNoteID,
+                  ));
+        }
+        return null;
       },
     );
   }

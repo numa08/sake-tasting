@@ -47,6 +47,12 @@ class SQLiteDatabaseImpl implements TastingNoteDatabase {
   }
 
   @override
+  Future<TastingNote> findTastingNoteByID(String tastingNoteID) async {
+    final entity = await _findByID('tasting_note', tastingNoteID);
+    return entity == null ? null : TastingNote.fromJSON(entity);
+  }
+
+  @override
   Future<List<TastingNoteImage>> findImage(String tastingNoteID) async {
     final database = await _databaseManager.database;
     final entities = await database.query('tasting_note_image',
@@ -71,12 +77,16 @@ class SQLiteDatabaseImpl implements TastingNoteDatabase {
       TastingNote tastingNote) async {
     final database = await _databaseManager.database;
     await database.transaction((transaction) async {
-      await transaction.insert('brewery', brewery.toJSON());
-      await transaction.insert('sake', sake.toJSON());
+      await transaction.insert('brewery', brewery.toJSON(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      await transaction.insert('sake', sake.toJSON(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
       for (final image in images) {
-        await transaction.insert('tasting_note_image', image.toJSON());
+        await transaction.insert('tasting_note_image', image.toJSON(),
+            conflictAlgorithm: ConflictAlgorithm.replace);
       }
-      await transaction.insert('tasting_note', tastingNote.toJSON());
+      await transaction.insert('tasting_note', tastingNote.toJSON(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
     });
   }
 }

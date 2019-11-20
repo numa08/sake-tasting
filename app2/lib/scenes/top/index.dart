@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:app2/data/database/database.dart';
 import 'package:app2/data/database/entitiy/entity.dart';
 import 'package:app2/scenes/edit_tasting_note/index.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 class TopScene extends StatefulWidget {
   const TopScene({Key key, this.database}) : super(key: key);
@@ -82,11 +86,57 @@ class _Body extends StatelessWidget {
   Future<Widget> _listTile(TastingNote note) async {
     final sake = await database.findSakeByID(note.sakeID);
     final brewery = await database.findBreweryByID(sake.breweryID);
+    final images = await database.findImage(note.tastingNoteID);
+    final documentPath = (await getApplicationDocumentsDirectory()).path;
+    final image = File(join(documentPath, images[0].name));
     return Builder(
       builder: (context) => InkWell(
-        child: ListTile(
-          title: Text(sake.name),
-          subtitle: Text(brewery.name),
+        child: Card(
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 180,
+                child: Stack(
+                  children: <Widget>[
+                    Positioned.fill(
+                      child: Image.file(image, fit: BoxFit.cover),
+                    ),
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                stops: const [
+                              0.2,
+                              0.3,
+                              1.0
+                            ],
+                                colors: [
+                              Colors.black.withAlpha(126),
+                              Colors.grey.withAlpha(64),
+                              Colors.white.withAlpha(0),
+                            ])),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          sake.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .title
+                              .copyWith(color: Theme.of(context).buttonColor),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
         onTap: () {
           Navigator.of(context).pushNamed(EditTastingNoteScene.name,

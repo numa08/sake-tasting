@@ -30,6 +30,8 @@ class _EditTastingNoteSceneState extends State<EditTastingNoteScene> {
   TastingNote _tastingNote;
   Sake _sake;
   Brewery _brewery;
+  List<TastingNoteImage> _images;
+  Directory _applicationDocumentDirectory;
 
   final _sakeController = TextEditingController();
   final _breweryController = TextEditingController();
@@ -41,6 +43,10 @@ class _EditTastingNoteSceneState extends State<EditTastingNoteScene> {
       final tastingNote = widget.tastingNoteID == null
           ? null
           : await widget.database.findTastingNoteByID(widget.tastingNoteID);
+      final applicationDocument = await getApplicationDocumentsDirectory();
+      setState(() {
+        _applicationDocumentDirectory = applicationDocument;
+      });
 
       if (tastingNote == null) {
         setState(() {
@@ -51,16 +57,20 @@ class _EditTastingNoteSceneState extends State<EditTastingNoteScene> {
               tastingNoteID: uuid.v4(),
               sakeID: _sake.sakeID,
               createdAtUTC: DateTime.now().millisecondsSinceEpoch);
+          _images = const <TastingNoteImage>[];
         });
       } else {
         final sake = await widget.database.findSakeByID(tastingNote.sakeID);
         final brewery = await widget.database.findBreweryByID(sake.breweryID);
+        final images =
+            await widget.database.findImage(tastingNote.tastingNoteID);
         setState(() {
           _tastingNote = tastingNote;
           _sake = sake;
           _brewery = brewery;
           _sakeController.text = _sake.name;
           _breweryController.text = _brewery.name;
+          _images = images;
         });
       }
     }();
@@ -92,7 +102,23 @@ class _EditTastingNoteSceneState extends State<EditTastingNoteScene> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               _ImagePickerForm(
-                onSaved: (images) {},
+                onSaved: (images) {
+                  setState(() {
+                    final uuid = Uuid();
+                    _images = images
+                        .map((f) => TastingNoteImage.create(
+                            imageID: uuid.v4(),
+                            name: basename(f.path),
+                            tastingNoteID: _tastingNote.tastingNoteID))
+                        .toList();
+                  });
+                },
+                initialValue: _images
+                        ?.map((i) =>
+                            join(_applicationDocumentDirectory.path, i.name))
+                        ?.map((p) => File(p))
+                        ?.toList() ??
+                    <File>[],
                 validator: (images) {
                   if (images.isEmpty) {
                     return '画像は1枚以上必要です';
@@ -154,8 +180,7 @@ class _EditTastingNoteSceneState extends State<EditTastingNoteScene> {
         tastingNoteID: _tastingNote.tastingNoteID,
         sakeID: sake.sakeID,
         createdAtUTC: DateTime.now().millisecondsSinceEpoch);
-    await widget.database
-        .save(sake, brewery, <TastingNoteImage>[], tastingNote);
+    await widget.database.save(sake, brewery, _images, tastingNote);
     Navigator.of(context).pop(SaveResult.ok);
   }
 

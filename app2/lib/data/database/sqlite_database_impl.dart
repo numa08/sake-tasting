@@ -81,6 +81,9 @@ class SQLiteDatabaseImpl implements TastingNoteDatabase {
           conflictAlgorithm: ConflictAlgorithm.replace);
       await transaction.insert('sake', sake.toJSON(),
           conflictAlgorithm: ConflictAlgorithm.replace);
+      await transaction.delete('tasting_note_image',
+          where: 'tasting_note_id = ?',
+          whereArgs: <String>[tastingNote.tastingNoteID]);
       for (final image in images) {
         await transaction.insert('tasting_note_image', image.toJSON(),
             conflictAlgorithm: ConflictAlgorithm.replace);

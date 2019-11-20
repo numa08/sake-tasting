@@ -98,8 +98,7 @@ class _EditTastingNoteSceneState extends State<EditTastingNoteScene> {
         ),
         body: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: <Widget>[
               _ImagePickerForm(
                 onSaved: (images) {
@@ -161,6 +160,39 @@ class _EditTastingNoteSceneState extends State<EditTastingNoteScene> {
                   return null;
                 },
                 controller: _breweryController,
+              ),
+              Container(
+                child: ListTile(
+                  title: Text('外観', style: Theme.of(context).textTheme.title),
+                  trailing: Icon(Icons.arrow_right),
+                  onTap: () {},
+                ),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide())),
+              ),
+              Container(
+                child: ListTile(
+                  title: Text('香り', style: Theme.of(context).textTheme.title),
+                  trailing: Icon(Icons.arrow_right),
+                  onTap: () {},
+                ),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide())),
+              ),
+              Container(
+                child: ListTile(
+                  title: Text('味わい', style: Theme.of(context).textTheme.title),
+                  trailing: Icon(Icons.arrow_right),
+                  onTap: () {},
+                ),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide())),
+              ),
+              Container(
+                child: ListTile(
+                  title:
+                      Text('個性の抽出', style: Theme.of(context).textTheme.title),
+                  trailing: Icon(Icons.arrow_right),
+                  onTap: () {},
+                ),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide())),
               )
             ],
           ),

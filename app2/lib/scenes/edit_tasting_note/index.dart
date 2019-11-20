@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:app2/data/database/database.dart';
 import 'package:app2/data/database/entitiy/entity.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 enum SaveResult {
@@ -86,6 +89,18 @@ class _EditTastingNoteSceneState extends State<EditTastingNoteScene> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              _ImagePickerForm(
+                onSaved: (images) {},
+                validator: (images) {
+                  if (images.isEmpty) {
+                    return '画像は1枚以上必要です';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 24,
+              ),
               TextFormField(
                 decoration: InputDecoration(
                     border: UnderlineInputBorder(),
@@ -147,5 +162,103 @@ class _EditTastingNoteSceneState extends State<EditTastingNoteScene> {
     _sakeController.dispose();
     _breweryController.dispose();
     super.dispose();
+  }
+}
+
+class _ImagePickerForm extends FormField<List<File>> {
+  _ImagePickerForm(
+      {FormFieldSetter<List<File>> onSaved,
+      FormFieldValidator<List<File>> validator,
+      List<File> initialValue = const <File>[]})
+      : super(
+            onSaved: onSaved,
+            validator: validator,
+            initialValue: initialValue,
+            builder: (FormFieldState<List<File>> state) {
+              return Container(
+                height: 96,
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(
+                    width: 12,
+                  ),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: state.value.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return RaisedButton(
+                        child: Icon(Icons.camera_enhance),
+                        onPressed: () {
+                          showDialog<void>(
+                              context: context,
+                              builder: (context) => SimpleDialog(
+                                    title: const Text('画像を追加'),
+                                    children: <Widget>[
+                                      SimpleDialogOption(
+                                        child: const Text('カメラで撮影'),
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          final image = await _pickImage(
+                                              ImageSource.camera);
+                                          final newList =
+                                              List<File>.from(state.value)
+                                                ..add(image);
+                                          state.didChange(newList);
+                                        },
+                                      ),
+                                      SimpleDialogOption(
+                                        child: const Text('ギャラリーから選択'),
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          final image = await _pickImage(
+                                              ImageSource.gallery);
+                                          final newList =
+                                              List<File>.from(state.value)
+                                                ..add(image);
+                                          state.didChange(newList);
+                                        },
+                                      )
+                                    ],
+                                  ));
+                        },
+                      );
+                    }
+                    return Stack(
+                      alignment: AlignmentDirectional.topEnd,
+                      children: <Widget>[
+                        Container(
+                          width: 96,
+                          height: 96,
+                          child: FlatButton(
+                            padding: const EdgeInsets.all(0),
+                            child: Image.file(state.value[index - 1],
+                                fit: BoxFit.fitHeight),
+                            onPressed: () {},
+                          ),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                              width: 24,
+                              height: 24,
+                              child: FlatButton(
+                                padding: const EdgeInsets.all(0),
+                                child: Icon(Icons.close),
+                                onPressed: () {},
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    );
+                  },
+                ),
+              );
+            });
+
+  static Future<File> _pickImage(ImageSource source) async {
+    final image = await ImagePicker.pickImage(source: source);
+    return image;
   }
 }

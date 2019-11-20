@@ -4,7 +4,9 @@ import 'package:app2/data/database/database.dart';
 import 'package:app2/data/database/entitiy/entity.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:path/path.dart';
 
 enum SaveResult {
   ok,
@@ -248,26 +250,31 @@ class _ImagePickerForm extends FormField<List<File>> {
                                   child: FlatButton(
                                     padding: const EdgeInsets.all(0),
                                     child: Icon(Icons.close),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       final image = state.value[index - 1];
                                       final newImages =
                                           List<File>.from(state.value)
                                             ..removeAt(index - 1);
                                       state.didChange(newImages);
 
-                                      Scaffold.of(context)
+                                      final closed = await Scaffold.of(context)
                                           .showSnackBar(SnackBar(
-                                        content: const Text('画像を削除しました'),
-                                        action: SnackBarAction(
-                                          label: 'もとに戻す',
-                                          onPressed: () {
-                                            final newImages =
-                                                List<File>.from(state.value)
-                                                  ..add(image);
-                                            state.didChange(newImages);
-                                          },
-                                        ),
-                                      ));
+                                            content: const Text('画像を削除しました'),
+                                            action: SnackBarAction(
+                                              label: 'もとに戻す',
+                                              onPressed: () {
+                                                final newImages =
+                                                    List<File>.from(state.value)
+                                                      ..add(image);
+                                                state.didChange(newImages);
+                                              },
+                                            ),
+                                          ))
+                                          .closed;
+                                      if (closed !=
+                                          SnackBarClosedReason.action) {
+                                        image.deleteSync();
+                                      }
                                     },
                                   ),
                                 )
@@ -299,6 +306,8 @@ class _ImagePickerForm extends FormField<List<File>> {
 
   static Future<File> _pickImage(ImageSource source) async {
     final image = await ImagePicker.pickImage(source: source);
-    return image;
+    final documentPath = (await getApplicationDocumentsDirectory()).path;
+    final newPath = join(documentPath, basename(image.path));
+    return image.copySync(newPath);
   }
 }

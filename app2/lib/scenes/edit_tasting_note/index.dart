@@ -175,103 +175,125 @@ class _ImagePickerForm extends FormField<List<File>> {
             validator: validator,
             initialValue: initialValue,
             builder: (FormFieldState<List<File>> state) {
-              return Container(
-                height: 96,
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => const SizedBox(
-                    width: 12,
-                  ),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: state.value.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return RaisedButton(
-                        child: Icon(Icons.camera_enhance),
-                        onPressed: () {
-                          showDialog<void>(
-                              context: context,
-                              builder: (context) => SimpleDialog(
-                                    title: const Text('画像を追加'),
-                                    children: <Widget>[
-                                      SimpleDialogOption(
-                                        child: const Text('カメラで撮影'),
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-                                          final image = await _pickImage(
-                                              ImageSource.camera);
-                                          final newList =
-                                              List<File>.from(state.value)
-                                                ..add(image);
-                                          state.didChange(newList);
-                                        },
-                                      ),
-                                      SimpleDialogOption(
-                                        child: const Text('ギャラリーから選択'),
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-                                          final image = await _pickImage(
-                                              ImageSource.gallery);
-                                          final newList =
-                                              List<File>.from(state.value)
-                                                ..add(image);
-                                          state.didChange(newList);
-                                        },
-                                      )
-                                    ],
-                                  ));
-                        },
-                      );
-                    }
-                    return Stack(
-                      alignment: AlignmentDirectional.topEnd,
-                      children: <Widget>[
-                        Container(
-                          width: 96,
-                          height: 96,
-                          child: FlatButton(
-                            padding: const EdgeInsets.all(0),
-                            child: Image.file(state.value[index - 1],
-                                fit: BoxFit.fitHeight),
-                            onPressed: () {},
-                          ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.end,
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    height: 96,
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => const SizedBox(
+                        width: 12,
+                      ),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.value.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return RaisedButton(
+                            child: Icon(Icons.camera_enhance),
+                            onPressed: () {
+                              showDialog<void>(
+                                  context: context,
+                                  builder: (context) => SimpleDialog(
+                                        title: const Text('画像を追加'),
+                                        children: <Widget>[
+                                          SimpleDialogOption(
+                                            child: const Text('カメラで撮影'),
+                                            onPressed: () async {
+                                              Navigator.pop(context);
+                                              final image = await _pickImage(
+                                                  ImageSource.camera);
+                                              final newList =
+                                                  List<File>.from(state.value)
+                                                    ..add(image);
+                                              state.didChange(newList);
+                                            },
+                                          ),
+                                          SimpleDialogOption(
+                                            child: const Text('ギャラリーから選択'),
+                                            onPressed: () async {
+                                              Navigator.pop(context);
+                                              final image = await _pickImage(
+                                                  ImageSource.gallery);
+                                              final newList =
+                                                  List<File>.from(state.value)
+                                                    ..add(image);
+                                              state.didChange(newList);
+                                            },
+                                          )
+                                        ],
+                                      ));
+                            },
+                          );
+                        }
+                        return Stack(
+                          alignment: AlignmentDirectional.topEnd,
                           children: <Widget>[
                             Container(
-                              width: 24,
-                              height: 24,
+                              width: 96,
+                              height: 96,
                               child: FlatButton(
                                 padding: const EdgeInsets.all(0),
-                                child: Icon(Icons.close),
-                                onPressed: () {
-                                  final image = state.value[index - 1];
-                                  final newImages = List<File>.from(state.value)
-                                    ..removeAt(index - 1);
-                                  state.didChange(newImages);
-
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: const Text('画像を削除しました'),
-                                    action: SnackBarAction(
-                                      label: 'もとに戻す',
-                                      onPressed: () {
-                                        final newImages =
-                                            List<File>.from(state.value)
-                                              ..add(image);
-                                        state.didChange(newImages);
-                                      },
-                                    ),
-                                  ));
-                                },
+                                child: Image.file(state.value[index - 1],
+                                    fit: BoxFit.fitHeight),
+                                onPressed: () {},
                               ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Container(
+                                  width: 24,
+                                  height: 24,
+                                  child: FlatButton(
+                                    padding: const EdgeInsets.all(0),
+                                    child: Icon(Icons.close),
+                                    onPressed: () {
+                                      final image = state.value[index - 1];
+                                      final newImages =
+                                          List<File>.from(state.value)
+                                            ..removeAt(index - 1);
+                                      state.didChange(newImages);
+
+                                      Scaffold.of(context)
+                                          .showSnackBar(SnackBar(
+                                        content: const Text('画像を削除しました'),
+                                        action: SnackBarAction(
+                                          label: 'もとに戻す',
+                                          onPressed: () {
+                                            final newImages =
+                                                List<File>.from(state.value)
+                                                  ..add(image);
+                                            state.didChange(newImages);
+                                          },
+                                        ),
+                                      ));
+                                    },
+                                  ),
+                                )
+                              ],
                             )
                           ],
-                        )
-                      ],
-                    );
-                  },
-                ),
+                        );
+                      },
+                    ),
+                  ),
+                  state.hasError
+                      ? Column(children: <Widget>[
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Builder(
+                            builder: (context) => Text(state.errorText,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    .copyWith(
+                                        color: Theme.of(context).errorColor)),
+                          )
+                        ])
+                      : Container(),
+                ],
               );
             });
 

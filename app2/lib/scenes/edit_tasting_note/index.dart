@@ -245,7 +245,25 @@ class _ImagePickerForm extends FormField<List<File>> {
                               child: FlatButton(
                                 padding: const EdgeInsets.all(0),
                                 child: Icon(Icons.close),
-                                onPressed: () {},
+                                onPressed: () {
+                                  final image = state.value[index - 1];
+                                  final newImages = List<File>.from(state.value)
+                                    ..removeAt(index - 1);
+                                  state.didChange(newImages);
+
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: const Text('画像を削除しました'),
+                                    action: SnackBarAction(
+                                      label: 'もとに戻す',
+                                      onPressed: () {
+                                        final newImages =
+                                            List<File>.from(state.value)
+                                              ..add(image);
+                                        state.didChange(newImages);
+                                      },
+                                    ),
+                                  ));
+                                },
                               ),
                             )
                           ],
